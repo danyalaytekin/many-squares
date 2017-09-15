@@ -19,3 +19,8 @@ open docs/index.html
 - `options.sideLength`: the length of each side of each square
 - `options.squareCount`: the number of squares to be shown
 
+## Known issues
+
+- I think there is a bug in the algorithm which finds the initial groups; occasionally an overlap is not detected
+- I spent most of my time trying to solve the algorithm required, and have not had time to better separate code into modules (`index.js` is way too heavy), or add unit tests, browser tests, support for various viewports, etc
+- algorithms could be optimised
