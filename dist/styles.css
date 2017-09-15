@@ -1,0 +1,14 @@
+.game {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 920px;
+    height: 400px;
+}
+
+.square {
+    position: absolute;
+    background-color: #4297B4;
+    width: 150px;
+    height: 150px;
+}
