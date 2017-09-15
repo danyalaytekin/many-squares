@@ -17171,7 +17171,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 
-__WEBPACK_IMPORTED_MODULE_1__ui_game_builder__["a" /* build */] ();
+const options = {
+    sideLength: 150,
+    squareCount: 7
+};
+
+__WEBPACK_IMPORTED_MODULE_2__ui_calculator__["c" /* init */] (options);
+
+__WEBPACK_IMPORTED_MODULE_1__ui_game_builder__["a" /* build */] (options);
 __WEBPACK_IMPORTED_MODULE_2__ui_calculator__["b" /* calculate */]();
 __WEBPACK_IMPORTED_MODULE_3__ui_table_renderer__["a" /* render */] (__WEBPACK_IMPORTED_MODULE_2__ui_calculator__["a" /* areas */]);
 
@@ -17240,7 +17247,6 @@ module.exports = function(module) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__shape_builder__ = __webpack_require__(5);
 
 
-const shapeCount = 7;
 const limits = {
     width: 920,
     height: 400
@@ -17256,12 +17262,10 @@ let shapes;
 
 document.getElementById ('game').addEventListener('drop', onDrop);
 document.getElementById ('game').addEventListener('dragover', function (e) {
-    console.log ('over');
     e.preventDefault ();
     return false;
 });
 document.getElementById ('game').addEventListener('dragenter', function (e) {
-    console.log ('enter');
     e.preventDefault ();
     return false;
 });
@@ -17274,13 +17278,13 @@ function generateRandomPosition () {
     };
 };
 
-function build (index) {
+function build (options) {
     shapes = [];
     
     document.getElementById ('game').innerHTML = '';
     
-    for (let i = 0; i < shapeCount; ++i) {
-        const shapeElement = __WEBPACK_IMPORTED_MODULE_0__shape_builder__["a" /* build */] (i);
+    for (let i = 0; i < options.squareCount; ++i) {
+        const shapeElement = __WEBPACK_IMPORTED_MODULE_0__shape_builder__["a" /* build */] (i, options.sideLength);
     
         const position = generateRandomPosition ();
         shapeElement.style.left = `${position.x}px`;
@@ -17312,16 +17316,12 @@ function build (index) {
 
 
 
-const sideLength = 150;
-
 const currentDragOffsets = {
     left: 0,
     top: 0
 };
 
 function onDragStart (e) {
-    console.log ('start');
-
     const shape = e.target;
     const bounds = shape.getBoundingClientRect ();
 
@@ -17329,11 +17329,9 @@ function onDragStart (e) {
     currentDragOffsets.top = e.clientY - bounds.top;
 
     e.dataTransfer.effectAllowed = 'move';
-    console.log ('start');
 }
 
 function onDrag (e) {
-    console.log ('drag');
     const shape = e.target;
     const bounds = shape.getBoundingClientRect ();
     e.target.style.left = `${e.pageX - currentDragOffsets.left}px`;
@@ -17344,7 +17342,7 @@ function onDrag (e) {
     __WEBPACK_IMPORTED_MODULE_2__table_renderer__["a" /* render */] (__WEBPACK_IMPORTED_MODULE_1__calculator__["a" /* areas */]);
 }
 
-function build (index) {
+function build (index, sideLength) {
     const element = document.createElement ('div');
     element.classList.add ('square');
     element.style.width = `${sideLength}px`;
@@ -17366,13 +17364,14 @@ function build (index) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return init; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return calculate; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return areas; });
 let groupsOfShapes = [];
 let areas = [];
 
-// TODO: Pass this in or work it out.
-const shapeCount = 7;
+let shapeCount;
+let sideLength;
 
 function areOverlapping (element1, element2) {
     const r1 = element1.getBoundingClientRect ();
@@ -17408,6 +17407,11 @@ function sortByArea () {
     areas.sort ((a, b) => b.area - a.area);
 }
 
+function init (options) {
+    shapeCount = options.squareCount;
+    sideLength = options.sideLength;
+}
+
 function calculate () {
     areas = [];
 
@@ -17418,67 +17422,75 @@ function calculate () {
     for (let i = 0; i < groupCount; ++i) {
         let group = groupsOfShapes[i];
 
-        // Find extremes.
-        let extremes = {
-            left: Number.MAX_VALUE,
-            right: 0,
-            top: Number.MAX_VALUE,
-            bottom: 0
-        };
-        for (let j = 0; j < group.length; ++j) {
-            const shape = group[j];
-            const r = shape.getBoundingClientRect ();
-            if (r.left < extremes.left) {
-                extremes.left = r.left;
-            }
-            if (r.right > extremes.right) {
-                extremes.right = r.right;
-            }
-            if (r.top < extremes.top) {
-                extremes.top = r.top;
-            }
-            if (r.bottom > extremes.bottom) {
-                extremes.bottom = r.bottom;
-            }
-        } 
-
-        // Create a two-dimensional canvas, and initialise all elements to zero.
-        let canvasLimits = {
-            width: extremes.right - extremes.left,
-            height: extremes.bottom - extremes.top
-        };
-        let canvas = new Array(Math.floor(canvasLimits.width)).fill(
-            new Array(Math.floor(canvasLimits.height)).fill (0)
-        );
-
-        // Paint each shape onto the canvas.
-        for (let k = 0; k < group.length; ++k) {
-            let shapeElement = group[k];
-            let rect = shapeElement.getBoundingClientRect ();
-            const r = {
-                left: Math.floor(rect.left - extremes.left),
-                right: Math.floor(rect.right - extremes.left),
-                top: Math.floor(rect.top - extremes.top),
-                bottom: Math.floor(rect.bottom - extremes.top)
+        if (group.length === 1) {
+            areas.push ({
+                group: group,
+                area: sideLength * sideLength
+            });
+        }
+        else {
+            // Find extremes.
+            let extremes = {
+                left: Number.MAX_VALUE,
+                right: 0,
+                top: Number.MAX_VALUE,
+                bottom: 0
             };
+            for (let j = 0; j < group.length; ++j) {
+                const shape = group[j];
+                const r = shape.getBoundingClientRect ();
+                if (r.left < extremes.left) {
+                    extremes.left = r.left;
+                }
+                if (r.right > extremes.right) {
+                    extremes.right = r.right;
+                }
+                if (r.top < extremes.top) {
+                    extremes.top = r.top;
+                }
+                if (r.bottom > extremes.bottom) {
+                    extremes.bottom = r.bottom;
+                }
+            } 
 
-            for (let m = r.left; m < r.right; ++m) {
-                for (let n = r.top; n < r.bottom; ++n) {
-                    canvas[m][n] = 1;
+            // Create a two-dimensional canvas, and initialise all elements to zero.
+            let canvasLimits = {
+                width: extremes.right - extremes.left,
+                height: extremes.bottom - extremes.top
+            };
+            let canvas = new Array(Math.floor(canvasLimits.width)).fill(
+                new Array(Math.floor(canvasLimits.height)).fill (0)
+            );
+
+            // Paint each shape onto the canvas.
+            for (let k = 0; k < group.length; ++k) {
+                let shapeElement = group[k];
+                let rect = shapeElement.getBoundingClientRect ();
+                const r = {
+                    left: Math.floor(rect.left - extremes.left),
+                    right: Math.floor(rect.right - extremes.left),
+                    top: Math.floor(rect.top - extremes.top),
+                    bottom: Math.floor(rect.bottom - extremes.top)
+                };
+
+                for (let m = r.left; m < r.right; ++m) {
+                    for (let n = r.top; n < r.bottom; ++n) {
+                        canvas[m][n] = 1;
+                    }
                 }
             }
-        }
 
-        // Count the number of ones on the canvas.
-        let area = canvas.reduce (function (a1, c1) {
-            return a1 + c1.reduce (function (a2, c2) {
-                return a2 + c2;
+            // Count the number of ones on the canvas.
+            let area = canvas.reduce (function (a1, c1) {
+                return a1 + c1.reduce (function (a2, c2) {
+                    return a2 + c2;
+                }, 0);
             }, 0);
-        }, 0);
-        areas.push ({
-            group: group,
-            area: area
-        });
+            areas.push ({
+                group: group,
+                area: area
+            });
+        }
     }
 
     sortByArea();

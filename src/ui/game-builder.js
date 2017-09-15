@@ -1,6 +1,5 @@
 import * as shapeBuilder from './shape-builder';
 
-const shapeCount = 7;
 const limits = {
     width: 920,
     height: 400
@@ -16,12 +15,10 @@ let shapes;
 
 document.getElementById ('game').addEventListener('drop', onDrop);
 document.getElementById ('game').addEventListener('dragover', function (e) {
-    console.log ('over');
     e.preventDefault ();
     return false;
 });
 document.getElementById ('game').addEventListener('dragenter', function (e) {
-    console.log ('enter');
     e.preventDefault ();
     return false;
 });
@@ -34,13 +31,13 @@ function generateRandomPosition () {
     };
 };
 
-function build (index) {
+function build (options) {
     shapes = [];
     
     document.getElementById ('game').innerHTML = '';
     
-    for (let i = 0; i < shapeCount; ++i) {
-        const shapeElement = shapeBuilder.build (i);
+    for (let i = 0; i < options.squareCount; ++i) {
+        const shapeElement = shapeBuilder.build (i, options.sideLength);
     
         const position = generateRandomPosition ();
         shapeElement.style.left = `${position.x}px`;

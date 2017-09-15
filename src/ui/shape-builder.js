@@ -2,16 +2,12 @@ import _ from 'lodash';
 import * as calculator from  './calculator';
 import * as tableRenderer from  './table-renderer';
 
-const sideLength = 150;
-
 const currentDragOffsets = {
     left: 0,
     top: 0
 };
 
 function onDragStart (e) {
-    console.log ('start');
-
     const shape = e.target;
     const bounds = shape.getBoundingClientRect ();
 
@@ -19,11 +15,9 @@ function onDragStart (e) {
     currentDragOffsets.top = e.clientY - bounds.top;
 
     e.dataTransfer.effectAllowed = 'move';
-    console.log ('start');
 }
 
 function onDrag (e) {
-    console.log ('drag');
     const shape = e.target;
     const bounds = shape.getBoundingClientRect ();
     e.target.style.left = `${e.pageX - currentDragOffsets.left}px`;
@@ -34,7 +28,7 @@ function onDrag (e) {
     tableRenderer.render (calculator.areas);
 }
 
-function build (index) {
+function build (index, sideLength) {
     const element = document.createElement ('div');
     element.classList.add ('square');
     element.style.width = `${sideLength}px`;

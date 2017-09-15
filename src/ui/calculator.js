@@ -1,8 +1,8 @@
 let groupsOfShapes = [];
 let areas = [];
 
-// TODO: Pass this in or work it out.
-const shapeCount = 7;
+let shapeCount;
+let sideLength;
 
 function areOverlapping (element1, element2) {
     const r1 = element1.getBoundingClientRect ();
@@ -38,6 +38,11 @@ function sortByArea () {
     areas.sort ((a, b) => b.area - a.area);
 }
 
+function init (options) {
+    shapeCount = options.squareCount;
+    sideLength = options.sideLength;
+}
+
 function calculate () {
     areas = [];
 
@@ -48,73 +53,82 @@ function calculate () {
     for (let i = 0; i < groupCount; ++i) {
         let group = groupsOfShapes[i];
 
-        // Find extremes.
-        let extremes = {
-            left: Number.MAX_VALUE,
-            right: 0,
-            top: Number.MAX_VALUE,
-            bottom: 0
-        };
-        for (let j = 0; j < group.length; ++j) {
-            const shape = group[j];
-            const r = shape.getBoundingClientRect ();
-            if (r.left < extremes.left) {
-                extremes.left = r.left;
-            }
-            if (r.right > extremes.right) {
-                extremes.right = r.right;
-            }
-            if (r.top < extremes.top) {
-                extremes.top = r.top;
-            }
-            if (r.bottom > extremes.bottom) {
-                extremes.bottom = r.bottom;
-            }
-        } 
-
-        // Create a two-dimensional canvas, and initialise all elements to zero.
-        let canvasLimits = {
-            width: extremes.right - extremes.left,
-            height: extremes.bottom - extremes.top
-        };
-        let canvas = new Array(Math.floor(canvasLimits.width)).fill(
-            new Array(Math.floor(canvasLimits.height)).fill (0)
-        );
-
-        // Paint each shape onto the canvas.
-        for (let k = 0; k < group.length; ++k) {
-            let shapeElement = group[k];
-            let rect = shapeElement.getBoundingClientRect ();
-            const r = {
-                left: Math.floor(rect.left - extremes.left),
-                right: Math.floor(rect.right - extremes.left),
-                top: Math.floor(rect.top - extremes.top),
-                bottom: Math.floor(rect.bottom - extremes.top)
+        if (group.length === 1) {
+            areas.push ({
+                group: group,
+                area: sideLength * sideLength
+            });
+        }
+        else {
+            // Find extremes.
+            let extremes = {
+                left: Number.MAX_VALUE,
+                right: 0,
+                top: Number.MAX_VALUE,
+                bottom: 0
             };
+            for (let j = 0; j < group.length; ++j) {
+                const shape = group[j];
+                const r = shape.getBoundingClientRect ();
+                if (r.left < extremes.left) {
+                    extremes.left = r.left;
+                }
+                if (r.right > extremes.right) {
+                    extremes.right = r.right;
+                }
+                if (r.top < extremes.top) {
+                    extremes.top = r.top;
+                }
+                if (r.bottom > extremes.bottom) {
+                    extremes.bottom = r.bottom;
+                }
+            } 
 
-            for (let m = r.left; m < r.right; ++m) {
-                for (let n = r.top; n < r.bottom; ++n) {
-                    canvas[m][n] = 1;
+            // Create a two-dimensional canvas, and initialise all elements to zero.
+            let canvasLimits = {
+                width: extremes.right - extremes.left,
+                height: extremes.bottom - extremes.top
+            };
+            let canvas = new Array(Math.floor(canvasLimits.width)).fill(
+                new Array(Math.floor(canvasLimits.height)).fill (0)
+            );
+
+            // Paint each shape onto the canvas.
+            for (let k = 0; k < group.length; ++k) {
+                let shapeElement = group[k];
+                let rect = shapeElement.getBoundingClientRect ();
+                const r = {
+                    left: Math.floor(rect.left - extremes.left),
+                    right: Math.floor(rect.right - extremes.left),
+                    top: Math.floor(rect.top - extremes.top),
+                    bottom: Math.floor(rect.bottom - extremes.top)
+                };
+
+                for (let m = r.left; m < r.right; ++m) {
+                    for (let n = r.top; n < r.bottom; ++n) {
+                        canvas[m][n] = 1;
+                    }
                 }
             }
-        }
 
-        // Count the number of ones on the canvas.
-        let area = canvas.reduce (function (a1, c1) {
-            return a1 + c1.reduce (function (a2, c2) {
-                return a2 + c2;
+            // Count the number of ones on the canvas.
+            let area = canvas.reduce (function (a1, c1) {
+                return a1 + c1.reduce (function (a2, c2) {
+                    return a2 + c2;
+                }, 0);
             }, 0);
-        }, 0);
-        areas.push ({
-            group: group,
-            area: area
-        });
+            areas.push ({
+                group: group,
+                area: area
+            });
+        }
     }
 
     sortByArea();
 }
 
 export {
+    init,
     calculate,
     areas
 };
