@@ -7,5 +7,3 @@ Built code is in `docs` rather than something like `dist`, so that it can be ser
 Configuration
 - `sideLength`
 - `squareCount`
-
-

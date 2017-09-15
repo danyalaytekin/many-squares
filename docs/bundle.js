@@ -17163,10 +17163,16 @@
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lodash__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lodash___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_lodash__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ui_table_renderer__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ui_shape_builder__ = __webpack_require__(5);
 
 
-const shapeCount = 7;
-const sideLength = 150;
+
+
+const options = {
+    shapeCount: 7,
+    sideLength: 150
+};
 
 const limits = {
     width: 920,
@@ -17191,7 +17197,8 @@ function onDrag (e) {
     const bounds = shape.getBoundingClientRect ();
     e.target.style.left = `${e.pageX - currentDragOffsets.left}px`;
     e.target.style.top = `${e.pageY - currentDragOffsets.top}px`;
-    calculate ();
+    const areas = calculate ();
+    __WEBPACK_IMPORTED_MODULE_1__ui_table_renderer__["a" /* render */] (areas);
 }
 
 function onDrop (e) {
@@ -17199,25 +17206,6 @@ function onDrop (e) {
     event.stopPropagation ();
     return false;
 }
-
-function buildShapeElement (index) {
-    const element = document.createElement ('div');
-    element.draggable = true;
-    element.addEventListener('dragstart', onDragStart);
-    element.addEventListener('drag', __WEBPACK_IMPORTED_MODULE_0_lodash___default.a.throttle (onDrag, 10));
-    element.classList.add ('square');
-    element.style.width = `${sideLength}px`;
-    element.style.height = element.style.width;
-    element.innerHTML = `Square ${index}`;
-    return element;
-}
-
-function generateRandomPosition () {
-    return {
-        x: Math.random () * (limits.width - sideLength),
-        y: Math.random () * (limits.height - sideLength)
-    };
-};
 
 function overlaps (element1, element2) {
     const r1 = element1.getBoundingClientRect ();
@@ -17228,39 +17216,38 @@ function overlaps (element1, element2) {
 
 let shapes;
 
-document.getElementById ('game').addEventListener('drop', onDrop);
-document.getElementById ('game').addEventListener('dragover', function (e) {
-    console.log ('over');
+function onDragOverGame (e) {
     e.preventDefault ();
     return false;
-});
-document.getElementById ('game').addEventListener('dragenter', function (e) {
-    console.log ('enter');
-    e.preventDefault ();
-    return false;
-});
+}
 
+function initialiseGameListeners (gameElement) {
+    gameElement.addEventListener('drop', onDrop);
+    gameElement.addEventListener('dragover', onDragOverGame);
+    gameElement.addEventListener('dragenter', onDragOverGame);    
+}
 
 function build () {
     shapes = [];
 
-    document.getElementById ('game').innerHTML = '';
+    const gameElement = document.getElementById ('game');
+    gameElement.innerHTML = '';
     
-    // Build elements.
-    for (let i = 0; i < shapeCount; ++i) {
-        const shapeElement = buildShapeElement (i);
-    
-        const position = generateRandomPosition ();
-        shapeElement.style.left = `${position.x}px`;
-        shapeElement.style.top = `${position.y}px`;
-    
+    for (let i = 0; i < options.shapeCount; ++i) {
+        const shapeElement = __WEBPACK_IMPORTED_MODULE_2__ui_shape_builder__["a" /* build */] (i);
         shapeElement.id = `shape${i}`;
+
+        shapeElement.draggable = true;
+        shapeElement.addEventListener('dragstart', onDragStart);
+        shapeElement.addEventListener('drag', __WEBPACK_IMPORTED_MODULE_0_lodash___default.a.throttle (onDrag, 10));    
         
-        document.getElementById ('game').appendChild (shapeElement);
-    
-        // TODO: Consider extracting this concern.
+        gameElement.appendChild (shapeElement);
+        __WEBPACK_IMPORTED_MODULE_2__ui_shape_builder__["c" /* setRandomPosition */] (shapeElement);
+        
         shapes.push ([shapeElement]);
     }
+
+    initialiseGameListeners (gameElement); 
 }
 
 function calculate() {
@@ -17268,7 +17255,7 @@ function calculate() {
 
     // Find groups of shapes.
     let groupsOfShapes = [];
-    for (let i = 0; i < shapeCount; ++i) {
+    for (let i = 0; i < options.shapeCount; ++i) {
         const element1 = document.getElementById (`shape${i}`);
 
         let group = groupsOfShapes.find (function (element) {
@@ -17279,7 +17266,7 @@ function calculate() {
             groupsOfShapes.push (group);
         }
 
-        for (let j = i + 1; j < shapeCount; ++j) {
+        for (let j = i + 1; j < options.shapeCount; ++j) {
             const element2 = document.getElementById (`shape${j}`);
 
             if (overlaps (element1, element2)) {
@@ -17287,8 +17274,6 @@ function calculate() {
             }
         }
     }
-
-    console.log (groupsOfShapes);
     
     // For each group of shapes, find its area.
     let groupCount = groupsOfShapes.length;
@@ -17317,15 +17302,13 @@ function calculate() {
             if (r.bottom > extremes.bottom) {
                 extremes.bottom = r.bottom;
             }
-        } 
-        console.log (extremes);
+        }
     
         // Create a two-dimensional canvas, and initialise all elements to zero.
         let canvasLimits = {
             width: extremes.right - extremes.left,
             height: extremes.bottom - extremes.top
         };
-        console.log (canvasLimits.width);
         let canvas = new Array(Math.floor(canvasLimits.width)).fill(
             new Array(Math.floor(canvasLimits.height)).fill (0)
         );
@@ -17364,27 +17347,18 @@ function calculate() {
         return b.area - a.area;
     });
 
-    // Create table
-//    const tableElement = document.createElement ('table');
-    let rowHtml = '';
-    rowHtml += `<tr><th>Names</th><th>Area (pixels squared)</th></tr>`;
-    for (let i = 0; i < areas.length; ++i) {
-        rowHtml += `<tr><td>${areas[i].group[0].innerHTML}</td><td>${areas[i].area}</td></tr>`;
-    }
-    const tableElement = document.getElementById ('results');
-    tableElement.innerHTML = rowHtml;
-//     document.getElementById ('game').appendChild (tableElement);
+    return areas;
 }
 
+__WEBPACK_IMPORTED_MODULE_2__ui_shape_builder__["b" /* init */] ({
+    sideLength: options.sideLength,
+    limits
+});
+
 build ();
-calculate ();
 
-// TODO: Fix const correctness.
-// TODO: Check your limits around m < r.right.
-// TODO: Consider making the original shapes a simpler structure.
-// TODO: Fix matrix calculation bug.  Way too big.
-
-// An alternative approach is that of http://codercareer.blogspot.co.uk/2011/12/no-27-area-of-rectangles.html
+const areas = calculate();
+__WEBPACK_IMPORTED_MODULE_1__ui_table_renderer__["a" /* render */] (areas);
 
 
 /***/ }),
@@ -17440,6 +17414,68 @@ module.exports = function(module) {
 	}
 	return module;
 };
+
+
+/***/ }),
+/* 4 */,
+/* 5 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (immutable) */ __webpack_exports__["b"] = init;
+/* harmony export (immutable) */ __webpack_exports__["a"] = build;
+/* harmony export (immutable) */ __webpack_exports__["c"] = setRandomPosition;
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lodash__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lodash___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_lodash__);
+
+
+let limits;
+let sideLength;
+
+function generateRandomPosition () {
+    return {
+        x: Math.random () * (limits.width - sideLength),
+        y: Math.random () * (limits.height - sideLength)
+    };
+};
+
+function init (options) {
+    limits = options.limits;
+    sideLength = options.sideLength;
+}
+
+function build (index) {
+    const element = document.createElement ('div');
+    element.classList.add ('square');
+    element.style.width = `${sideLength}px`;
+    element.style.height = element.style.width;
+    element.innerHTML = `Square ${index}`;
+    return element;
+}
+
+function setRandomPosition (element) {
+    const position = generateRandomPosition ();
+    element.style.left = `${position.x}px`;
+    element.style.top = `${position.y}px`;
+}
+
+
+/***/ }),
+/* 6 */,
+/* 7 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (immutable) */ __webpack_exports__["a"] = render;
+function render (areas) {
+    let rowHtml = '';
+    rowHtml += `<tr><th>Names</th><th>Area (pixels squared)</th></tr>`;
+    for (let i = 0; i < areas.length; ++i) {
+        rowHtml += `<tr><td>${areas[i].group[0].innerHTML}</td><td>${areas[i].area}</td></tr>`;
+    }
+    const tableElement = document.getElementById ('results');
+    tableElement.innerHTML = rowHtml;
+}
 
 
 /***/ })

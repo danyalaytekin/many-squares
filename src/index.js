@@ -1,7 +1,11 @@
 import _ from 'lodash';
+import * as tableRenderer from './ui/table-renderer';
+import * as shapeBuilder from './ui/shape-builder';
 
-const shapeCount = 7;
-const sideLength = 150;
+const options = {
+    shapeCount: 7,
+    sideLength: 150
+};
 
 const limits = {
     width: 920,
@@ -26,7 +30,8 @@ function onDrag (e) {
     const bounds = shape.getBoundingClientRect ();
     e.target.style.left = `${e.pageX - currentDragOffsets.left}px`;
     e.target.style.top = `${e.pageY - currentDragOffsets.top}px`;
-    calculate ();
+    const areas = calculate ();
+    tableRenderer.render (areas);
 }
 
 function onDrop (e) {
@@ -34,25 +39,6 @@ function onDrop (e) {
     event.stopPropagation ();
     return false;
 }
-
-function buildShapeElement (index) {
-    const element = document.createElement ('div');
-    element.draggable = true;
-    element.addEventListener('dragstart', onDragStart);
-    element.addEventListener('drag', _.throttle (onDrag, 10));
-    element.classList.add ('square');
-    element.style.width = `${sideLength}px`;
-    element.style.height = element.style.width;
-    element.innerHTML = `Square ${index}`;
-    return element;
-}
-
-function generateRandomPosition () {
-    return {
-        x: Math.random () * (limits.width - sideLength),
-        y: Math.random () * (limits.height - sideLength)
-    };
-};
 
 function overlaps (element1, element2) {
     const r1 = element1.getBoundingClientRect ();
@@ -63,39 +49,38 @@ function overlaps (element1, element2) {
 
 let shapes;
 
-document.getElementById ('game').addEventListener('drop', onDrop);
-document.getElementById ('game').addEventListener('dragover', function (e) {
-    console.log ('over');
+function onDragOverGame (e) {
     e.preventDefault ();
     return false;
-});
-document.getElementById ('game').addEventListener('dragenter', function (e) {
-    console.log ('enter');
-    e.preventDefault ();
-    return false;
-});
+}
 
+function initialiseGameListeners (gameElement) {
+    gameElement.addEventListener('drop', onDrop);
+    gameElement.addEventListener('dragover', onDragOverGame);
+    gameElement.addEventListener('dragenter', onDragOverGame);    
+}
 
 function build () {
     shapes = [];
 
-    document.getElementById ('game').innerHTML = '';
+    const gameElement = document.getElementById ('game');
+    gameElement.innerHTML = '';
     
-    // Build elements.
-    for (let i = 0; i < shapeCount; ++i) {
-        const shapeElement = buildShapeElement (i);
-    
-        const position = generateRandomPosition ();
-        shapeElement.style.left = `${position.x}px`;
-        shapeElement.style.top = `${position.y}px`;
-    
+    for (let i = 0; i < options.shapeCount; ++i) {
+        const shapeElement = shapeBuilder.build (i);
         shapeElement.id = `shape${i}`;
+
+        shapeElement.draggable = true;
+        shapeElement.addEventListener('dragstart', onDragStart);
+        shapeElement.addEventListener('drag', _.throttle (onDrag, 10));    
         
-        document.getElementById ('game').appendChild (shapeElement);
-    
-        // TODO: Consider extracting this concern.
+        gameElement.appendChild (shapeElement);
+        shapeBuilder.setRandomPosition (shapeElement);
+        
         shapes.push ([shapeElement]);
     }
+
+    initialiseGameListeners (gameElement); 
 }
 
 function calculate() {
@@ -103,7 +88,7 @@ function calculate() {
 
     // Find groups of shapes.
     let groupsOfShapes = [];
-    for (let i = 0; i < shapeCount; ++i) {
+    for (let i = 0; i < options.shapeCount; ++i) {
         const element1 = document.getElementById (`shape${i}`);
 
         let group = groupsOfShapes.find (function (element) {
@@ -114,7 +99,7 @@ function calculate() {
             groupsOfShapes.push (group);
         }
 
-        for (let j = i + 1; j < shapeCount; ++j) {
+        for (let j = i + 1; j < options.shapeCount; ++j) {
             const element2 = document.getElementById (`shape${j}`);
 
             if (overlaps (element1, element2)) {
@@ -122,8 +107,6 @@ function calculate() {
             }
         }
     }
-
-    console.log (groupsOfShapes);
     
     // For each group of shapes, find its area.
     let groupCount = groupsOfShapes.length;
@@ -152,15 +135,13 @@ function calculate() {
             if (r.bottom > extremes.bottom) {
                 extremes.bottom = r.bottom;
             }
-        } 
-        console.log (extremes);
+        }
     
         // Create a two-dimensional canvas, and initialise all elements to zero.
         let canvasLimits = {
             width: extremes.right - extremes.left,
             height: extremes.bottom - extremes.top
         };
-        console.log (canvasLimits.width);
         let canvas = new Array(Math.floor(canvasLimits.width)).fill(
             new Array(Math.floor(canvasLimits.height)).fill (0)
         );
@@ -199,19 +180,15 @@ function calculate() {
         return b.area - a.area;
     });
 
-    // Create table
-//    const tableElement = document.createElement ('table');
-    let rowHtml = '';
-    rowHtml += `<tr><th>Names</th><th>Area (pixels squared)</th></tr>`;
-    for (let i = 0; i < areas.length; ++i) {
-        rowHtml += `<tr><td>${areas[i].group[0].innerHTML}</td><td>${areas[i].area}</td></tr>`;
-    }
-    const tableElement = document.getElementById ('results');
-    tableElement.innerHTML = rowHtml;
-//     document.getElementById ('game').appendChild (tableElement);
+    return areas;
 }
 
+shapeBuilder.init ({
+    sideLength: options.sideLength,
+    limits
+});
+
 build ();
-calculate ();
 
-
+const areas = calculate();
+tableRenderer.render (areas);

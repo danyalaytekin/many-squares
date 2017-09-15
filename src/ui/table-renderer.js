@@ -1,4 +1,4 @@
-function render (areas) {
+export function render (areas) {
     let rowHtml = '';
     rowHtml += `<tr><th>Names</th><th>Area (pixels squared)</th></tr>`;
     for (let i = 0; i < areas.length; ++i) {
@@ -7,7 +7,3 @@ function render (areas) {
     const tableElement = document.getElementById ('results');
     tableElement.innerHTML = rowHtml;
 }
-
-export {
-    render
-};
