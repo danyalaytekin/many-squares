@@ -17184,6 +17184,8 @@ const currentDragOffsets = {
     top: 0
 };
 
+let shapes;
+
 function onDragStart (e) {
     const shape = e.target;
     const bounds = shape.getBoundingClientRect ();
@@ -17213,8 +17215,6 @@ function overlaps (element1, element2) {
     const separated = r1.right < r2.left || r1.left > r2.right || r1.bottom < r2.top || r1.top > r2.bottom;
     return ! separated;
 }
-
-let shapes;
 
 function onDragOverGame (e) {
     e.preventDefault ();
@@ -17304,15 +17304,17 @@ function calculate() {
             }
         }
     
-        // Create a two-dimensional canvas, and initialise all elements to zero.
+        // Create a two-dimensional canvas and initialise all elements to zero.
         let canvasLimits = {
-            width: extremes.right - extremes.left,
-            height: extremes.bottom - extremes.top
+            width: Math.floor(extremes.right - extremes.left),
+            height: Math.floor(extremes.bottom - extremes.top)
         };
-        let canvas = new Array(Math.floor(canvasLimits.width)).fill(
-            new Array(Math.floor(canvasLimits.height)).fill (0)
-        );
-    
+        let canvas = [];
+        for (let i = 0; i < canvasLimits.width; ++i) {
+            const column = new Array(canvasLimits.height).fill (0);
+            canvas.push (column);
+        }
+        
         // Paint each shape onto the canvas.
         for (let k = 0; k < group.length; ++k) {
             let shapeElement = group[k];
@@ -17323,20 +17325,20 @@ function calculate() {
                 top: Math.floor(rect.top - extremes.top),
                 bottom: Math.floor(rect.bottom - extremes.top)
             };
-    
             for (let m = r.left; m < r.right; ++m) {
                 for (let n = r.top; n < r.bottom; ++n) {
                     canvas[m][n] = 1;
                 }
             }
         }
-    
+
         // Count the number of ones on the canvas.
         let area = canvas.reduce (function (a1, c1) {
             return a1 + c1.reduce (function (a2, c2) {
                 return a2 + c2;
             }, 0);
         }, 0);
+        
         areas.push ({
             group: group,
             area: area
@@ -17469,7 +17471,7 @@ function setRandomPosition (element) {
 /* harmony export (immutable) */ __webpack_exports__["a"] = render;
 function render (areas) {
     let rowHtml = '';
-    rowHtml += `<tr><th>Names</th><th>Area (pixels squared)</th></tr>`;
+    rowHtml += `<tr><th>Group containing</th><th>Area (pixels squared)</th></tr>`;
     for (let i = 0; i < areas.length; ++i) {
         rowHtml += `<tr><td>${areas[i].group[0].innerHTML}</td><td>${areas[i].area}</td></tr>`;
     }
