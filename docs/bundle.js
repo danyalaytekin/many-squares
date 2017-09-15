@@ -17312,6 +17312,8 @@ function build (index) {
 
 
 
+const sideLength = 150;
+
 const currentDragOffsets = {
     left: 0,
     top: 0
@@ -17345,6 +17347,9 @@ function onDrag (e) {
 function build (index) {
     const element = document.createElement ('div');
     element.classList.add ('square');
+    element.style.width = `${sideLength}px`;
+    element.style.height = element.style.width;
+
     element.innerHTML = `Square ${index}`;
 
     element.draggable = true;
