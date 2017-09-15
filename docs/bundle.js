@@ -60,31 +60,11 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ 	return __webpack_require__(__webpack_require__.s = 1);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lodash__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lodash___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_lodash__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ui_game_builder__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ui_calculator__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ui_table_renderer__ = __webpack_require__(8);
-
-
-
-
-
-__WEBPACK_IMPORTED_MODULE_1__ui_game_builder__["a" /* build */] ();
-__WEBPACK_IMPORTED_MODULE_2__ui_calculator__["b" /* calculate */]();
-__WEBPACK_IMPORTED_MODULE_3__ui_table_renderer__["a" /* render */] (__WEBPACK_IMPORTED_MODULE_2__ui_calculator__["a" /* areas */]);
-
-/***/ }),
-/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, module) {var __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -17176,6 +17156,27 @@ __WEBPACK_IMPORTED_MODULE_3__ui_table_renderer__["a" /* render */] (__WEBPACK_IM
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2), __webpack_require__(3)(module)))
 
 /***/ }),
+/* 1 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lodash__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lodash___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_lodash__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ui_game_builder__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ui_calculator__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ui_table_renderer__ = __webpack_require__(7);
+
+
+
+
+
+__WEBPACK_IMPORTED_MODULE_1__ui_game_builder__["a" /* build */] ();
+__WEBPACK_IMPORTED_MODULE_2__ui_calculator__["b" /* calculate */]();
+__WEBPACK_IMPORTED_MODULE_3__ui_table_renderer__["a" /* render */] (__WEBPACK_IMPORTED_MODULE_2__ui_calculator__["a" /* areas */]);
+
+
+/***/ }),
 /* 2 */
 /***/ (function(module, exports) {
 
@@ -17236,7 +17237,7 @@ module.exports = function(module) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return build; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__shape_builder__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__shape_builder__ = __webpack_require__(5);
 
 
 const shapeCount = 7;
@@ -17245,7 +17246,25 @@ const limits = {
     height: 400
 };
 
+function onDrop (e) {
+    event.preventDefault ();
+    event.stopPropagation ();
+    return false;
+}
+
 let shapes;
+
+document.getElementById ('game').addEventListener('drop', onDrop);
+document.getElementById ('game').addEventListener('dragover', function (e) {
+    console.log ('over');
+    e.preventDefault ();
+    return false;
+});
+document.getElementById ('game').addEventListener('dragenter', function (e) {
+    console.log ('enter');
+    e.preventDefault ();
+    return false;
+});
 
 function generateRandomPosition () {
     // TODO: Detect the limits and remove their hard-coding here.
@@ -17280,26 +17299,65 @@ function build (index) {
 
 
 /***/ }),
-/* 5 */,
-/* 6 */
+/* 5 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return build; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lodash__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lodash___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_lodash__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__calculator__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__table_renderer__ = __webpack_require__(7);
+
+
+
+
+const currentDragOffsets = {
+    left: 0,
+    top: 0
+};
+
+function onDragStart (e) {
+    console.log ('start');
+
+    const shape = e.target;
+    const bounds = shape.getBoundingClientRect ();
+
+    currentDragOffsets.left = e.clientX - bounds.left;
+    currentDragOffsets.top = e.clientY - bounds.top;
+
+    e.dataTransfer.effectAllowed = 'move';
+    console.log ('start');
+}
+
+function onDrag (e) {
+    console.log ('drag');
+    const shape = e.target;
+    const bounds = shape.getBoundingClientRect ();
+    e.target.style.left = `${e.pageX - currentDragOffsets.left}px`;
+    e.target.style.top = `${e.pageY - currentDragOffsets.top}px`;
+
+    // TODO: Emit event instead of calling directly.
+    __WEBPACK_IMPORTED_MODULE_1__calculator__["b" /* calculate */] ();
+    __WEBPACK_IMPORTED_MODULE_2__table_renderer__["a" /* render */] (__WEBPACK_IMPORTED_MODULE_1__calculator__["a" /* areas */]);
+}
+
 function build (index) {
     const element = document.createElement ('div');
-    element.draggable = true;
-    // element.addEventListener('dragstart', onDragStart);
-    // element.addEventListener('drag', _.throttle (onDrag, 10));
     element.classList.add ('square');
     element.innerHTML = `Square ${index}`;
+
+    element.draggable = true;
+    element.addEventListener('dragstart', onDragStart);
+    element.addEventListener('drag', __WEBPACK_IMPORTED_MODULE_0_lodash___default.a.throttle (onDrag, 10));
+
     return element;
 }
 
 
 
 /***/ }),
-/* 7 */
+/* 6 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -17346,6 +17404,8 @@ function sortByArea () {
 }
 
 function calculate () {
+    areas = [];
+
     findGroups ();
 
     // For each group of shapes, find its area.
@@ -17376,14 +17436,12 @@ function calculate () {
                 extremes.bottom = r.bottom;
             }
         } 
-        console.log (extremes);
 
         // Create a two-dimensional canvas, and initialise all elements to zero.
         let canvasLimits = {
             width: extremes.right - extremes.left,
             height: extremes.bottom - extremes.top
         };
-        console.log (canvasLimits.width);
         let canvas = new Array(Math.floor(canvasLimits.width)).fill(
             new Array(Math.floor(canvasLimits.height)).fill (0)
         );
@@ -17425,7 +17483,7 @@ function calculate () {
 
 
 /***/ }),
-/* 8 */
+/* 7 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";

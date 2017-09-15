@@ -39,6 +39,8 @@ function sortByArea () {
 }
 
 function calculate () {
+    areas = [];
+
     findGroups ();
 
     // For each group of shapes, find its area.
@@ -69,14 +71,12 @@ function calculate () {
                 extremes.bottom = r.bottom;
             }
         } 
-        console.log (extremes);
 
         // Create a two-dimensional canvas, and initialise all elements to zero.
         let canvasLimits = {
             width: extremes.right - extremes.left,
             height: extremes.bottom - extremes.top
         };
-        console.log (canvasLimits.width);
         let canvas = new Array(Math.floor(canvasLimits.width)).fill(
             new Array(Math.floor(canvasLimits.height)).fill (0)
         );

@@ -6,7 +6,25 @@ const limits = {
     height: 400
 };
 
+function onDrop (e) {
+    event.preventDefault ();
+    event.stopPropagation ();
+    return false;
+}
+
 let shapes;
+
+document.getElementById ('game').addEventListener('drop', onDrop);
+document.getElementById ('game').addEventListener('dragover', function (e) {
+    console.log ('over');
+    e.preventDefault ();
+    return false;
+});
+document.getElementById ('game').addEventListener('dragenter', function (e) {
+    console.log ('enter');
+    e.preventDefault ();
+    return false;
+});
 
 function generateRandomPosition () {
     // TODO: Detect the limits and remove their hard-coding here.
