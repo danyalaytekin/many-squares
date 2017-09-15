@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/danyalaytekin/many-squares/issues"
   },
-  "homepage": "https://github.com/danyalaytekin/many-squares#readme"
+  "homepage": "https://github.com/danyalaytekin/many-squares#readme",
+  "devDependencies": {
+    "webpack": "^3.5.6"
+  }
 }
