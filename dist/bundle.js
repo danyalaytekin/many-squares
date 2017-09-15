@@ -17341,6 +17341,10 @@ function findGroups () {
     return groupsOfShapes;
 }
 
+function sortByArea () {
+    areas.sort ((a, b) => b.area - a.area);
+}
+
 function calculate () {
     findGroups ();
 
@@ -17413,11 +17417,9 @@ function calculate () {
             area: area
         });
     }
-}
 
-// areas.sort (function (a, b) {
-//     return b.area - a.area;
-// });
+    sortByArea();
+}
 
 
 
