@@ -17214,8 +17214,7 @@ function calculate() {
     // For each group of shapes, find its area.
     let areas = [];
     const groupCount = shapeGroups.length;
-    for (let i = 0; i < groupCount; ++i) {
-        const group = shapeGroups[i];
+    for (const group of shapeGroups) {
     
         // Find extremes.
         let extremes = {
@@ -17224,8 +17223,7 @@ function calculate() {
             top: Number.MAX_VALUE,
             bottom: 0
         };
-        for (let j = 0; j < group.length; ++j) {
-            const shape = group[j];
+        for (const shape of group) {
             const r = shape.getBoundingClientRect ();
             if (r.left < extremes.left) {
                 extremes.left = r.left;
@@ -17252,22 +17250,8 @@ function calculate() {
             canvas.push (column);
         }
 
-        // Paint each shape onto the canvas.
-        for (let k = 0; k < group.length; ++k) {
-            const shapeElement = group[k];
-            const rect = shapeElement.getBoundingClientRect ();
-            const r = {
-                left: Math.floor(rect.left - extremes.left),
-                right: Math.floor(rect.right - extremes.left),
-                top: Math.floor(rect.top - extremes.top),
-                bottom: Math.floor(rect.bottom - extremes.top)
-            };
-            for (let m = r.left; m < r.right; ++m) {
-                for (let n = r.top; n < r.bottom; ++n) {
-                    canvas[m][n] = 1;
-                }
-            }
-        }
+
+        __WEBPACK_IMPORTED_MODULE_0__model_geometry__["c" /* paintGroupOntoCanvas */] (group, canvas, extremes);
 
         const area = __WEBPACK_IMPORTED_MODULE_0__model_geometry__["a" /* countPaintedPixels */] (canvas);
         areas.push ({
@@ -17412,6 +17396,7 @@ function setRandomPosition (element) {
 "use strict";
 /* harmony export (immutable) */ __webpack_exports__["b"] = findShapeGroups;
 /* harmony export (immutable) */ __webpack_exports__["a"] = countPaintedPixels;
+/* harmony export (immutable) */ __webpack_exports__["c"] = paintGroupOntoCanvas;
 function areElementsOverlapping (e0, e1) {
     const r0 = e0.getBoundingClientRect ();
     const r1 = e1.getBoundingClientRect ();
@@ -17448,6 +17433,22 @@ function countPaintedPixels (canvas) {
     }, 0);
 }
 
+function paintGroupOntoCanvas (group, canvas, extremes) {
+    for (const shapeElement of group) {
+        const rect = shapeElement.getBoundingClientRect ();
+        const r = {
+            left: Math.floor(rect.left - extremes.left),
+            right: Math.floor(rect.right - extremes.left),
+            top: Math.floor(rect.top - extremes.top),
+            bottom: Math.floor(rect.bottom - extremes.top)
+        };
+        for (let x = r.left; x < r.right; ++x) {
+            for (let y = r.top; y < r.bottom; ++y) {
+                canvas[x][y] = 1;
+            }
+        }
+    }
+}
 
 /***/ }),
 /* 8 */

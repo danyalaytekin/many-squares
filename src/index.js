@@ -85,22 +85,8 @@ function calculate() {
             canvas.push (column);
         }
 
-        // Paint each shape onto the canvas.
-        for (let k = 0; k < group.length; ++k) {
-            const shapeElement = group[k];
-            const rect = shapeElement.getBoundingClientRect ();
-            const r = {
-                left: Math.floor(rect.left - extremes.left),
-                right: Math.floor(rect.right - extremes.left),
-                top: Math.floor(rect.top - extremes.top),
-                bottom: Math.floor(rect.bottom - extremes.top)
-            };
-            for (let m = r.left; m < r.right; ++m) {
-                for (let n = r.top; n < r.bottom; ++n) {
-                    canvas[m][n] = 1;
-                }
-            }
-        }
+
+        geometry.paintGroupOntoCanvas (group, canvas, extremes);
 
         const area = geometry.countPaintedPixels (canvas);
         areas.push ({

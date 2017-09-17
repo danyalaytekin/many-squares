@@ -33,3 +33,20 @@ export function countPaintedPixels (canvas) {
         }, 0);
     }, 0);
 }
+
+export function paintGroupOntoCanvas (group, canvas, extremes) {
+    for (const shapeElement of group) {
+        const rect = shapeElement.getBoundingClientRect ();
+        const r = {
+            left: Math.floor(rect.left - extremes.left),
+            right: Math.floor(rect.right - extremes.left),
+            top: Math.floor(rect.top - extremes.top),
+            bottom: Math.floor(rect.bottom - extremes.top)
+        };
+        for (let x = r.left; x < r.right; ++x) {
+            for (let y = r.top; y < r.bottom; ++y) {
+                canvas[x][y] = 1;
+            }
+        }
+    }
+}
