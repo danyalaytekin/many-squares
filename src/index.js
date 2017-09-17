@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import * as overlapModel from './model/overlap-model';
 import * as tableRenderer from './ui/table-renderer';
 import * as shapeBuilder from './ui/shape-builder';
 
@@ -80,38 +81,14 @@ function build () {
         shapeElements.push (shapeElement);
     }
 
-    initialiseGameListeners (gameElement); 
-}
-
-function findGroupsOfShapes (shapeElements) {
-    let groupsOfShapes = [];
-    for (let i = 0; i < shapeElements.length; ++i) {
-        const element1 = shapeElements[i];
-
-        let group = groupsOfShapes.find (function (element) {
-            return element.indexOf (element1) > -1;
-        });
-        if (group === undefined) {
-            group = [element1];
-            groupsOfShapes.push (group);
-        }
-
-        for (let j = i + 1; j < shapeElements.length; ++j) {
-            const element2 = shapeElements[j];
-
-            if (overlaps (element1, element2)) {
-                group.push(element2);
-            }
-        }
-    }
-    return groupsOfShapes;
+    initialiseGameListeners (gameElement);
 }
 
 function calculate() {
-    let areas = [];
-    const groupsOfShapes = findGroupsOfShapes (shapeElements);
+    const groupsOfShapes = overlapModel.findGroupsOfShapes (shapeElements);
     
     // For each group of shapes, find its area.
+    let areas = [];
     const groupCount = groupsOfShapes.length;
     for (let i = 0; i < groupCount; ++i) {
         const group = groupsOfShapes[i];
@@ -150,7 +127,7 @@ function calculate() {
             const column = new Array(canvasLimits.height).fill (0);
             canvas.push (column);
         }
-        
+
         // Paint each shape onto the canvas.
         for (let k = 0; k < group.length; ++k) {
             const shapeElement = group[k];
@@ -168,13 +145,7 @@ function calculate() {
             }
         }
 
-        // Count the number of ones on the canvas.
-        const area = canvas.reduce (function (a1, c1) {
-            return a1 + c1.reduce (function (a2, c2) {
-                return a2 + c2;
-            }, 0);
-        }, 0);
-        
+        const area = overlapModel.countPaintedPixels (canvas);
         areas.push ({
             group: group,
             area: area

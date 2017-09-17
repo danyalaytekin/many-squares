@@ -17163,8 +17163,10 @@
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lodash__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lodash___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_lodash__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ui_table_renderer__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ui_shape_builder__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__model_overlap_model__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ui_table_renderer__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ui_shape_builder__ = __webpack_require__(5);
+
 
 
 
@@ -17200,7 +17202,7 @@ function onDrag (e) {
     e.target.style.left = `${e.pageX - currentDragOffsets.left}px`;
     e.target.style.top = `${e.pageY - currentDragOffsets.top}px`;
     const areas = calculate ();
-    __WEBPACK_IMPORTED_MODULE_1__ui_table_renderer__["a" /* render */] (areas);
+    __WEBPACK_IMPORTED_MODULE_2__ui_table_renderer__["a" /* render */] (areas);
 }
 
 function onDrop (e) {
@@ -17234,7 +17236,7 @@ function build () {
     gameElement.innerHTML = '';
     
     for (let i = 0; i < options.shapeCount; ++i) {
-        const shapeElement = __WEBPACK_IMPORTED_MODULE_2__ui_shape_builder__["a" /* build */] (i);
+        const shapeElement = __WEBPACK_IMPORTED_MODULE_3__ui_shape_builder__["a" /* build */] (i);
         shapeElement.id = `shape${i}`;
 
         shapeElement.draggable = true;
@@ -17242,43 +17244,19 @@ function build () {
         shapeElement.addEventListener('drag', __WEBPACK_IMPORTED_MODULE_0_lodash___default.a.throttle (onDrag, 100));
         
         gameElement.appendChild (shapeElement);
-        __WEBPACK_IMPORTED_MODULE_2__ui_shape_builder__["c" /* setRandomPosition */] (shapeElement);
+        __WEBPACK_IMPORTED_MODULE_3__ui_shape_builder__["c" /* setRandomPosition */] (shapeElement);
         
         shapeElements.push (shapeElement);
     }
 
-    initialiseGameListeners (gameElement); 
-}
-
-function findGroupsOfShapes (shapeElements) {
-    let groupsOfShapes = [];
-    for (let i = 0; i < shapeElements.length; ++i) {
-        const element1 = shapeElements[i];
-
-        let group = groupsOfShapes.find (function (element) {
-            return element.indexOf (element1) > -1;
-        });
-        if (group === undefined) {
-            group = [element1];
-            groupsOfShapes.push (group);
-        }
-
-        for (let j = i + 1; j < shapeElements.length; ++j) {
-            const element2 = shapeElements[j];
-
-            if (overlaps (element1, element2)) {
-                group.push(element2);
-            }
-        }
-    }
-    return groupsOfShapes;
+    initialiseGameListeners (gameElement);
 }
 
 function calculate() {
-    let areas = [];
-    const groupsOfShapes = findGroupsOfShapes (shapeElements);
+    const groupsOfShapes = __WEBPACK_IMPORTED_MODULE_1__model_overlap_model__["b" /* findGroupsOfShapes */] (shapeElements);
     
     // For each group of shapes, find its area.
+    let areas = [];
     const groupCount = groupsOfShapes.length;
     for (let i = 0; i < groupCount; ++i) {
         const group = groupsOfShapes[i];
@@ -17317,7 +17295,7 @@ function calculate() {
             const column = new Array(canvasLimits.height).fill (0);
             canvas.push (column);
         }
-        
+
         // Paint each shape onto the canvas.
         for (let k = 0; k < group.length; ++k) {
             const shapeElement = group[k];
@@ -17335,13 +17313,7 @@ function calculate() {
             }
         }
 
-        // Count the number of ones on the canvas.
-        const area = canvas.reduce (function (a1, c1) {
-            return a1 + c1.reduce (function (a2, c2) {
-                return a2 + c2;
-            }, 0);
-        }, 0);
-        
+        const area = __WEBPACK_IMPORTED_MODULE_1__model_overlap_model__["a" /* countPaintedPixels */] (canvas);
         areas.push ({
             group: group,
             area: area
@@ -17352,7 +17324,7 @@ function calculate() {
     return areas;
 }
 
-__WEBPACK_IMPORTED_MODULE_2__ui_shape_builder__["b" /* init */] ({
+__WEBPACK_IMPORTED_MODULE_3__ui_shape_builder__["b" /* init */] ({
     sideLength: options.sideLength,
     limits
 });
@@ -17360,7 +17332,7 @@ __WEBPACK_IMPORTED_MODULE_2__ui_shape_builder__["b" /* init */] ({
 build ();
 
 const areas = calculate();
-__WEBPACK_IMPORTED_MODULE_1__ui_table_renderer__["a" /* render */] (areas);
+__WEBPACK_IMPORTED_MODULE_2__ui_table_renderer__["a" /* render */] (areas);
 
 
 /***/ }),
@@ -17475,6 +17447,46 @@ function setRandomPosition (element) {
     const position = generateRandomPosition ();
     element.style.left = `${position.x}px`;
     element.style.top = `${position.y}px`;
+}
+
+
+/***/ }),
+/* 6 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (immutable) */ __webpack_exports__["b"] = findGroupsOfShapes;
+/* harmony export (immutable) */ __webpack_exports__["a"] = countPaintedPixels;
+function findGroupsOfShapes (shapeElements) {
+    let groupsOfShapes = [];
+    for (let i = 0; i < shapeElements.length; ++i) {
+        const element1 = shapeElements[i];
+
+        let group = groupsOfShapes.find (function (element) {
+            return element.indexOf (element1) > -1;
+        });
+        if (group === undefined) {
+            group = [element1];
+            groupsOfShapes.push (group);
+        }
+
+        for (let j = i + 1; j < shapeElements.length; ++j) {
+            const element2 = shapeElements[j];
+
+            if (overlaps (element1, element2)) {
+                group.push(element2);
+            }
+        }
+    }
+    return groupsOfShapes;
+}
+
+function countPaintedPixels (canvas) {
+    return canvas.reduce (function (a1, c1) {
+        return a1 + c1.reduce (function (a2, c2) {
+            return a2 + c2;
+        }, 0);
+    }, 0);
 }
 
 
