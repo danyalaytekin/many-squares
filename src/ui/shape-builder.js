@@ -20,6 +20,7 @@ export function build (index) {
     element.classList.add ('square');
     element.style.width = `${sideLength}px`;
     element.style.height = element.style.width;
+    element.style.lineHeight = element.style.width;
     element.innerHTML = `Square ${index}`;
     return element;
 }

@@ -13,6 +13,7 @@ body {
 .square {
     position: absolute;
     background-color: #4297B4;
+    text-align: center;
 }
 
 table {
