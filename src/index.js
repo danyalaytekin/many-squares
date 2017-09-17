@@ -15,7 +15,7 @@ const limits = {
 
 let shapeElements;
 
-function build () {
+function initialise () {
     shapeElements = [];
 
     const gameElement = document.getElementById ('game');
@@ -68,5 +68,5 @@ shapeBuilder.init ({
     limits
 });
 
-build ();
+initialise ();
 onViewChanged ();

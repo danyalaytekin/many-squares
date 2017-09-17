@@ -17182,7 +17182,7 @@ const limits = {
 
 let shapeElements;
 
-function build () {
+function initialise () {
     shapeElements = [];
 
     const gameElement = document.getElementById ('game');
@@ -17235,7 +17235,7 @@ __WEBPACK_IMPORTED_MODULE_2__ui_shape_builder__["b" /* init */] ({
     limits
 });
 
-build ();
+initialise ();
 onViewChanged ();
 
 
