@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import randomcolor from 'randomcolor';
 
 let limits;
 let sideLength;
@@ -29,4 +30,11 @@ export function setRandomPosition (element) {
     const position = generateRandomPosition ();
     element.style.left = `${position.x}px`;
     element.style.top = `${position.y}px`;
+}
+
+export function applyRandomColourToGroup (elements) {
+    const backgroundColour = randomcolor ();
+    for (const element of elements) {
+        element.style.backgroundColor = backgroundColour;
+    } 
 }

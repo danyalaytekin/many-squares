@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 1);
+/******/ 	return __webpack_require__(__webpack_require__.s = 2);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -17153,119 +17153,10 @@
   }
 }.call(this));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2), __webpack_require__(3)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6), __webpack_require__(1)(module)))
 
 /***/ }),
 /* 1 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__model_geometry__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ui_table_renderer__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ui_shape_builder__ = __webpack_require__(5);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ui_listeners__ = __webpack_require__(9);
-
-
-
-
-
-const options = {
-    shapeCount: 7,
-    sideLength: 150
-};
-
-const limits = {
-    width: 920,
-    height: 400
-};
-
-let shapeElements;
-
-function initialise () {
-    shapeElements = [];
-
-    const gameElement = document.getElementById ('game');
-    gameElement.innerHTML = '';
-    
-    for (let i = 0; i < options.shapeCount; ++i) {
-        const shapeElement = __WEBPACK_IMPORTED_MODULE_2__ui_shape_builder__["a" /* build */] (i);
-        shapeElement.id = `shape${i}`;
-        __WEBPACK_IMPORTED_MODULE_3__ui_listeners__["d" /* makeShapeDraggable */] (shapeElement);
-
-        gameElement.appendChild (shapeElement);
-        __WEBPACK_IMPORTED_MODULE_2__ui_shape_builder__["c" /* setRandomPosition */] (shapeElement);
-        
-        shapeElements.push (shapeElement);
-    }
-
-    __WEBPACK_IMPORTED_MODULE_3__ui_listeners__["c" /* initialiseGameListeners */] (gameElement);
-    __WEBPACK_IMPORTED_MODULE_3__ui_listeners__["a" /* emitter */].on(__WEBPACK_IMPORTED_MODULE_3__ui_listeners__["b" /* eventNameForShapeDrag */], onViewChanged);
-}
-
-function onViewChanged () {
-    const areas = findAreas ();
-    __WEBPACK_IMPORTED_MODULE_1__ui_table_renderer__["a" /* render */] (areas);
-}
-
-function findAreas() {
-    let areas = [];
-
-    const shapeGroups = __WEBPACK_IMPORTED_MODULE_0__model_geometry__["d" /* findShapeGroups */] (shapeElements);
-    for (const group of shapeGroups) {
-        const extremes = __WEBPACK_IMPORTED_MODULE_0__model_geometry__["c" /* findExtremitiesOfGroup */] (group);
-        const canvas = __WEBPACK_IMPORTED_MODULE_0__model_geometry__["b" /* createPaintableCanvasForGroup */] (extremes);
-        __WEBPACK_IMPORTED_MODULE_0__model_geometry__["e" /* paintGroupOntoCanvas */] (group, canvas, extremes);
-
-        const area = __WEBPACK_IMPORTED_MODULE_0__model_geometry__["a" /* countPaintedPixels */] (canvas);
-        areas.push ({
-            group: group,
-            area: area
-        });
-    }
-
-    areas.sort ((a, b) => b.area - a.area);
-    return areas;
-}
-
-__WEBPACK_IMPORTED_MODULE_2__ui_shape_builder__["b" /* init */] ({
-    sideLength: options.sideLength,
-    limits
-});
-
-initialise ();
-onViewChanged ();
-
-
-/***/ }),
-/* 2 */
-/***/ (function(module, exports) {
-
-var g;
-
-// This works in non-strict mode
-g = (function() {
-	return this;
-})();
-
-try {
-	// This works if eval is allowed (see CSP)
-	g = g || Function("return this")() || (1,eval)("this");
-} catch(e) {
-	// This works if the window reference is available
-	if(typeof window === "object")
-		g = window;
-}
-
-// g can still be undefined, but nothing to do about it...
-// We return undefined, instead of nothing here, so it's
-// easier to handle this case. if(!global) { ...}
-
-module.exports = g;
-
-
-/***/ }),
-/* 3 */
 /***/ (function(module, exports) {
 
 module.exports = function(module) {
@@ -17293,69 +17184,92 @@ module.exports = function(module) {
 
 
 /***/ }),
-/* 4 */
+/* 2 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (immutable) */ __webpack_exports__["a"] = render;
-function render (areas) {
-    let rowHtml = '';
-    rowHtml += `<tr><th>Group containing</th><th>Area (pixels squared)</th></tr>`;
-    for (let i = 0; i < areas.length; ++i) {
-        rowHtml += `<tr><td>${areas[i].group[0].innerHTML}</td><td>${areas[i].area}</td></tr>`;
-    }
-    const tableElement = document.getElementById ('results');
-    tableElement.innerHTML = rowHtml;
-}
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__model_geometry__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ui_table_renderer__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ui_shape_builder__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ui_listeners__ = __webpack_require__(8);
 
 
-/***/ }),
-/* 5 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (immutable) */ __webpack_exports__["b"] = init;
-/* harmony export (immutable) */ __webpack_exports__["a"] = build;
-/* harmony export (immutable) */ __webpack_exports__["c"] = setRandomPosition;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lodash__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lodash___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_lodash__);
 
 
-let limits;
-let sideLength;
 
-function generateRandomPosition () {
-    return {
-        x: Math.random () * (limits.width - sideLength),
-        y: Math.random () * (limits.height - sideLength)
-    };
+const options = {
+    shapeCount: 7,
+    sideLength: 150
 };
 
-function init (options) {
-    limits = options.limits;
-    sideLength = options.sideLength;
+const limits = {
+    width: 920,
+    height: 400
+};
+
+let shapeElements;
+
+function initialise () {
+    shapeElements = [];
+
+    const gameElement = document.getElementById ('game');
+    gameElement.innerHTML = '';
+    
+    for (let i = 0; i < options.shapeCount; ++i) {
+        const shapeElement = __WEBPACK_IMPORTED_MODULE_2__ui_shape_builder__["b" /* build */] (i);
+        shapeElement.id = `shape${i}`;
+        __WEBPACK_IMPORTED_MODULE_3__ui_listeners__["d" /* makeShapeDraggable */] (shapeElement);
+
+        gameElement.appendChild (shapeElement);
+        __WEBPACK_IMPORTED_MODULE_2__ui_shape_builder__["d" /* setRandomPosition */] (shapeElement);
+        
+        shapeElements.push (shapeElement);
+    }
+
+    __WEBPACK_IMPORTED_MODULE_3__ui_listeners__["c" /* initialiseGameListeners */] (gameElement);
+    __WEBPACK_IMPORTED_MODULE_3__ui_listeners__["a" /* emitter */].on(__WEBPACK_IMPORTED_MODULE_3__ui_listeners__["b" /* eventNameForShapeDrag */], onViewChanged);
 }
 
-function build (index) {
-    const element = document.createElement ('div');
-    element.classList.add ('square');
-    element.style.width = `${sideLength}px`;
-    element.style.height = element.style.width;
-    element.style.lineHeight = element.style.width;
-    element.innerHTML = `Square ${index}`;
-    return element;
+function onViewChanged () {
+    const areas = findAreas ();
+    __WEBPACK_IMPORTED_MODULE_1__ui_table_renderer__["a" /* render */] (areas);
+    for (const area of areas) {
+        __WEBPACK_IMPORTED_MODULE_2__ui_shape_builder__["a" /* applyRandomColourToGroup */] (area.group);
+    }
 }
 
-function setRandomPosition (element) {
-    const position = generateRandomPosition ();
-    element.style.left = `${position.x}px`;
-    element.style.top = `${position.y}px`;
+function findAreas() {
+    let areas = [];
+
+    const shapeGroups = __WEBPACK_IMPORTED_MODULE_0__model_geometry__["d" /* findShapeGroups */] (shapeElements);
+    for (const group of shapeGroups) {
+        const extremes = __WEBPACK_IMPORTED_MODULE_0__model_geometry__["c" /* findExtremitiesOfGroup */] (group);
+        const canvas = __WEBPACK_IMPORTED_MODULE_0__model_geometry__["b" /* createPaintableCanvasForGroup */] (extremes);
+        __WEBPACK_IMPORTED_MODULE_0__model_geometry__["e" /* paintGroupOntoCanvas */] (group, canvas, extremes);
+
+        const area = __WEBPACK_IMPORTED_MODULE_0__model_geometry__["a" /* countPaintedPixels */] (canvas);
+        areas.push ({
+            group: group,
+            area: area
+        });
+    }
+
+    areas.sort ((a, b) => b.area - a.area);
+    return areas;
 }
+
+__WEBPACK_IMPORTED_MODULE_2__ui_shape_builder__["c" /* init */] ({
+    sideLength: options.sideLength,
+    limits
+});
+
+initialise ();
+onViewChanged ();
 
 
 /***/ }),
-/* 6 */,
-/* 7 */
+/* 3 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -17459,7 +17373,632 @@ function paintGroupOntoCanvas (group, canvas, extremes) {
 }
 
 /***/ }),
+/* 4 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (immutable) */ __webpack_exports__["a"] = render;
+function render (areas) {
+    let rowHtml = '';
+    rowHtml += `<tr><th>Group containing</th><th>Area (pixels squared)</th></tr>`;
+    for (let i = 0; i < areas.length; ++i) {
+        rowHtml += `<tr><td>${areas[i].group[0].innerHTML}</td><td>${areas[i].area}</td></tr>`;
+    }
+    const tableElement = document.getElementById ('results');
+    tableElement.innerHTML = rowHtml;
+}
+
+
+/***/ }),
+/* 5 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (immutable) */ __webpack_exports__["c"] = init;
+/* harmony export (immutable) */ __webpack_exports__["b"] = build;
+/* harmony export (immutable) */ __webpack_exports__["d"] = setRandomPosition;
+/* harmony export (immutable) */ __webpack_exports__["a"] = applyRandomColourToGroup;
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lodash__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lodash___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_lodash__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_randomcolor__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_randomcolor___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_randomcolor__);
+
+
+
+let limits;
+let sideLength;
+
+function generateRandomPosition () {
+    return {
+        x: Math.random () * (limits.width - sideLength),
+        y: Math.random () * (limits.height - sideLength)
+    };
+};
+
+function init (options) {
+    limits = options.limits;
+    sideLength = options.sideLength;
+}
+
+function build (index) {
+    const element = document.createElement ('div');
+    element.classList.add ('square');
+    element.style.width = `${sideLength}px`;
+    element.style.height = element.style.width;
+    element.style.lineHeight = element.style.width;
+    element.innerHTML = `Square ${index}`;
+    return element;
+}
+
+function setRandomPosition (element) {
+    const position = generateRandomPosition ();
+    element.style.left = `${position.x}px`;
+    element.style.top = `${position.y}px`;
+}
+
+function applyRandomColourToGroup (elements) {
+    const backgroundColour = __WEBPACK_IMPORTED_MODULE_1_randomcolor___default() ();
+    for (const element of elements) {
+        element.style.backgroundColor = backgroundColour;
+    } 
+}
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports) {
+
+var g;
+
+// This works in non-strict mode
+g = (function() {
+	return this;
+})();
+
+try {
+	// This works if eval is allowed (see CSP)
+	g = g || Function("return this")() || (1,eval)("this");
+} catch(e) {
+	// This works if the window reference is available
+	if(typeof window === "object")
+		g = window;
+}
+
+// g can still be undefined, but nothing to do about it...
+// We return undefined, instead of nothing here, so it's
+// easier to handle this case. if(!global) { ...}
+
+module.exports = g;
+
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(module) {// randomColor by David Merfield under the CC0 license
+// https://github.com/davidmerfield/randomColor/
+
+;(function(root, factory) {
+
+  // Support CommonJS
+  if (true) {
+    var randomColor = factory();
+
+    // Support NodeJS & Component, which allow module.exports to be a function
+    if (typeof module === 'object' && module && module.exports) {
+      exports = module.exports = randomColor;
+    }
+
+    // Support CommonJS 1.1.1 spec
+    exports.randomColor = randomColor;
+
+  // Support AMD
+  } else if (typeof define === 'function' && define.amd) {
+    define([], factory);
+
+  // Support vanilla script loading
+  } else {
+    root.randomColor = factory();
+  }
+
+}(this, function() {
+
+  // Seed to get repeatable colors
+  var seed = null;
+
+  // Shared color dictionary
+  var colorDictionary = {};
+
+  // Populate the color dictionary
+  loadColorBounds();
+
+  var randomColor = function (options) {
+
+    options = options || {};
+
+    // Check if there is a seed and ensure it's an
+    // integer. Otherwise, reset the seed value.
+    if (options.seed !== undefined && options.seed !== null && options.seed === parseInt(options.seed, 10)) {
+      seed = options.seed;
+
+    // A string was passed as a seed
+    } else if (typeof options.seed === 'string') {
+      seed = stringToInteger(options.seed);
+
+    // Something was passed as a seed but it wasn't an integer or string
+    } else if (options.seed !== undefined && options.seed !== null) {
+      throw new TypeError('The seed value must be an integer or string');
+
+    // No seed, reset the value outside.
+    } else {
+      seed = null;
+    }
+
+    var H,S,B;
+
+    // Check if we need to generate multiple colors
+    if (options.count !== null && options.count !== undefined) {
+
+      var totalColors = options.count,
+          colors = [];
+
+      options.count = null;
+
+      while (totalColors > colors.length) {
+
+        // Since we're generating multiple colors,
+        // incremement the seed. Otherwise we'd just
+        // generate the same color each time...
+        if (seed && options.seed) options.seed += 1;
+
+        colors.push(randomColor(options));
+      }
+
+      options.count = totalColors;
+
+      return colors;
+    }
+
+    // First we pick a hue (H)
+    H = pickHue(options);
+
+    // Then use H to determine saturation (S)
+    S = pickSaturation(H, options);
+
+    // Then use S and H to determine brightness (B).
+    B = pickBrightness(H, S, options);
+
+    // Then we return the HSB color in the desired format
+    return setFormat([H,S,B], options);
+  };
+
+  function pickHue (options) {
+
+    var hueRange = getHueRange(options.hue),
+        hue = randomWithin(hueRange);
+
+    // Instead of storing red as two seperate ranges,
+    // we group them, using negative numbers
+    if (hue < 0) {hue = 360 + hue;}
+
+    return hue;
+
+  }
+
+  function pickSaturation (hue, options) {
+
+    if (options.hue === 'monochrome') {
+      return 0;
+    }
+
+    if (options.luminosity === 'random') {
+      return randomWithin([0,100]);
+    }
+
+    var saturationRange = getSaturationRange(hue);
+
+    var sMin = saturationRange[0],
+        sMax = saturationRange[1];
+
+    switch (options.luminosity) {
+
+      case 'bright':
+        sMin = 55;
+        break;
+
+      case 'dark':
+        sMin = sMax - 10;
+        break;
+
+      case 'light':
+        sMax = 55;
+        break;
+   }
+
+    return randomWithin([sMin, sMax]);
+
+  }
+
+  function pickBrightness (H, S, options) {
+
+    var bMin = getMinimumBrightness(H, S),
+        bMax = 100;
+
+    switch (options.luminosity) {
+
+      case 'dark':
+        bMax = bMin + 20;
+        break;
+
+      case 'light':
+        bMin = (bMax + bMin)/2;
+        break;
+
+      case 'random':
+        bMin = 0;
+        bMax = 100;
+        break;
+    }
+
+    return randomWithin([bMin, bMax]);
+  }
+
+  function setFormat (hsv, options) {
+
+    switch (options.format) {
+
+      case 'hsvArray':
+        return hsv;
+
+      case 'hslArray':
+        return HSVtoHSL(hsv);
+
+      case 'hsl':
+        var hsl = HSVtoHSL(hsv);
+        return 'hsl('+hsl[0]+', '+hsl[1]+'%, '+hsl[2]+'%)';
+
+      case 'hsla':
+        var hslColor = HSVtoHSL(hsv);
+        var alpha = options.alpha || Math.random();
+        return 'hsla('+hslColor[0]+', '+hslColor[1]+'%, '+hslColor[2]+'%, ' + alpha + ')';
+
+      case 'rgbArray':
+        return HSVtoRGB(hsv);
+
+      case 'rgb':
+        var rgb = HSVtoRGB(hsv);
+        return 'rgb(' + rgb.join(', ') + ')';
+
+      case 'rgba':
+        var rgbColor = HSVtoRGB(hsv);
+        var alpha = options.alpha || Math.random();
+        return 'rgba(' + rgbColor.join(', ') + ', ' + alpha + ')';
+
+      default:
+        return HSVtoHex(hsv);
+    }
+
+  }
+
+  function getMinimumBrightness(H, S) {
+
+    var lowerBounds = getColorInfo(H).lowerBounds;
+
+    for (var i = 0; i < lowerBounds.length - 1; i++) {
+
+      var s1 = lowerBounds[i][0],
+          v1 = lowerBounds[i][1];
+
+      var s2 = lowerBounds[i+1][0],
+          v2 = lowerBounds[i+1][1];
+
+      if (S >= s1 && S <= s2) {
+
+         var m = (v2 - v1)/(s2 - s1),
+             b = v1 - m*s1;
+
+         return m*S + b;
+      }
+
+    }
+
+    return 0;
+  }
+
+  function getHueRange (colorInput) {
+
+    if (typeof parseInt(colorInput) === 'number') {
+
+      var number = parseInt(colorInput);
+
+      if (number < 360 && number > 0) {
+        return [number, number];
+      }
+
+    }
+
+    if (typeof colorInput === 'string') {
+
+      if (colorDictionary[colorInput]) {
+        var color = colorDictionary[colorInput];
+        if (color.hueRange) {return color.hueRange;}
+      } else if (colorInput.match(/^#?([0-9A-F]{3}|[0-9A-F]{6})$/i)) {
+        var hue = HexToHSB(colorInput)[0];
+        return [ hue, hue ];
+      }
+    }
+
+    return [0,360];
+
+  }
+
+  function getSaturationRange (hue) {
+    return getColorInfo(hue).saturationRange;
+  }
+
+  function getColorInfo (hue) {
+
+    // Maps red colors to make picking hue easier
+    if (hue >= 334 && hue <= 360) {
+      hue-= 360;
+    }
+
+    for (var colorName in colorDictionary) {
+       var color = colorDictionary[colorName];
+       if (color.hueRange &&
+           hue >= color.hueRange[0] &&
+           hue <= color.hueRange[1]) {
+          return colorDictionary[colorName];
+       }
+    } return 'Color not found';
+  }
+
+  function randomWithin (range) {
+    if (seed === null) {
+      return Math.floor(range[0] + Math.random()*(range[1] + 1 - range[0]));
+    } else {
+      //Seeded random algorithm from http://indiegamr.com/generate-repeatable-random-numbers-in-js/
+      var max = range[1] || 1;
+      var min = range[0] || 0;
+      seed = (seed * 9301 + 49297) % 233280;
+      var rnd = seed / 233280.0;
+      return Math.floor(min + rnd * (max - min));
+    }
+  }
+
+  function HSVtoHex (hsv){
+
+    var rgb = HSVtoRGB(hsv);
+
+    function componentToHex(c) {
+        var hex = c.toString(16);
+        return hex.length == 1 ? '0' + hex : hex;
+    }
+
+    var hex = '#' + componentToHex(rgb[0]) + componentToHex(rgb[1]) + componentToHex(rgb[2]);
+
+    return hex;
+
+  }
+
+  function defineColor (name, hueRange, lowerBounds) {
+
+    var sMin = lowerBounds[0][0],
+        sMax = lowerBounds[lowerBounds.length - 1][0],
+
+        bMin = lowerBounds[lowerBounds.length - 1][1],
+        bMax = lowerBounds[0][1];
+
+    colorDictionary[name] = {
+      hueRange: hueRange,
+      lowerBounds: lowerBounds,
+      saturationRange: [sMin, sMax],
+      brightnessRange: [bMin, bMax]
+    };
+
+  }
+
+  function loadColorBounds () {
+
+    defineColor(
+      'monochrome',
+      null,
+      [[0,0],[100,0]]
+    );
+
+    defineColor(
+      'red',
+      [-26,18],
+      [[20,100],[30,92],[40,89],[50,85],[60,78],[70,70],[80,60],[90,55],[100,50]]
+    );
+
+    defineColor(
+      'orange',
+      [19,46],
+      [[20,100],[30,93],[40,88],[50,86],[60,85],[70,70],[100,70]]
+    );
+
+    defineColor(
+      'yellow',
+      [47,62],
+      [[25,100],[40,94],[50,89],[60,86],[70,84],[80,82],[90,80],[100,75]]
+    );
+
+    defineColor(
+      'green',
+      [63,178],
+      [[30,100],[40,90],[50,85],[60,81],[70,74],[80,64],[90,50],[100,40]]
+    );
+
+    defineColor(
+      'blue',
+      [179, 257],
+      [[20,100],[30,86],[40,80],[50,74],[60,60],[70,52],[80,44],[90,39],[100,35]]
+    );
+
+    defineColor(
+      'purple',
+      [258, 282],
+      [[20,100],[30,87],[40,79],[50,70],[60,65],[70,59],[80,52],[90,45],[100,42]]
+    );
+
+    defineColor(
+      'pink',
+      [283, 334],
+      [[20,100],[30,90],[40,86],[60,84],[80,80],[90,75],[100,73]]
+    );
+
+  }
+
+  function HSVtoRGB (hsv) {
+
+    // this doesn't work for the values of 0 and 360
+    // here's the hacky fix
+    var h = hsv[0];
+    if (h === 0) {h = 1;}
+    if (h === 360) {h = 359;}
+
+    // Rebase the h,s,v values
+    h = h/360;
+    var s = hsv[1]/100,
+        v = hsv[2]/100;
+
+    var h_i = Math.floor(h*6),
+      f = h * 6 - h_i,
+      p = v * (1 - s),
+      q = v * (1 - f*s),
+      t = v * (1 - (1 - f)*s),
+      r = 256,
+      g = 256,
+      b = 256;
+
+    switch(h_i) {
+      case 0: r = v; g = t; b = p;  break;
+      case 1: r = q; g = v; b = p;  break;
+      case 2: r = p; g = v; b = t;  break;
+      case 3: r = p; g = q; b = v;  break;
+      case 4: r = t; g = p; b = v;  break;
+      case 5: r = v; g = p; b = q;  break;
+    }
+
+    var result = [Math.floor(r*255), Math.floor(g*255), Math.floor(b*255)];
+    return result;
+  }
+
+  function HexToHSB (hex) {
+    hex = hex.replace(/^#/, '');
+    hex = hex.length === 3 ? hex.replace(/(.)/g, '$1$1') : hex;
+
+    var red = parseInt(hex.substr(0, 2), 16) / 255,
+          green = parseInt(hex.substr(2, 2), 16) / 255,
+          blue = parseInt(hex.substr(4, 2), 16) / 255;
+
+    var cMax = Math.max(red, green, blue),
+          delta = cMax - Math.min(red, green, blue),
+          saturation = cMax ? (delta / cMax) : 0;
+
+    switch (cMax) {
+      case red: return [ 60 * (((green - blue) / delta) % 6) || 0, saturation, cMax ];
+      case green: return [ 60 * (((blue - red) / delta) + 2) || 0, saturation, cMax ];
+      case blue: return [ 60 * (((red - green) / delta) + 4) || 0, saturation, cMax ];
+    }
+  }
+
+  function HSVtoHSL (hsv) {
+    var h = hsv[0],
+      s = hsv[1]/100,
+      v = hsv[2]/100,
+      k = (2-s)*v;
+
+    return [
+      h,
+      Math.round(s*v / (k<1 ? k : 2-k) * 10000) / 100,
+      k/2 * 100
+    ];
+  }
+
+  function stringToInteger (string) {
+    var total = 0
+    for (var i = 0; i !== string.length; i++) {
+      if (total >= Number.MAX_SAFE_INTEGER) break;
+      total += string.charCodeAt(i)
+    }
+    return total
+  }
+
+  return randomColor;
+}));
+
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)(module)))
+
+/***/ }),
 /* 8 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (immutable) */ __webpack_exports__["c"] = initialiseGameListeners;
+/* harmony export (immutable) */ __webpack_exports__["d"] = makeShapeDraggable;
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_events__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_events___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_events__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_lodash__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_lodash___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_lodash__);
+
+
+
+const currentDragOffsets = {
+    left: 0,
+    top: 0
+};
+
+function onDropOnGame (e) {
+    event.preventDefault ();
+    event.stopPropagation ();
+    return false;
+}
+
+function onDragOverGame (e) {
+    e.preventDefault ();
+    return false;
+}
+
+function onShapeDragStart (e) {
+    const shape = e.target;
+    const bounds = shape.getBoundingClientRect ();
+    currentDragOffsets.left = e.clientX - bounds.left;
+    currentDragOffsets.top = e.clientY - bounds.top;
+    e.dataTransfer.effectAllowed = 'move';
+}
+
+function onShapeDrag (e) {
+    const shape = e.target;
+    const bounds = shape.getBoundingClientRect ();
+    e.target.style.left = `${e.pageX - currentDragOffsets.left}px`;
+    e.target.style.top = `${e.pageY - currentDragOffsets.top}px`;
+    emitter.emit (eventNameForShapeDrag);
+}
+
+const emitter = new __WEBPACK_IMPORTED_MODULE_0_events___default.a ();
+/* harmony export (immutable) */ __webpack_exports__["a"] = emitter;
+
+const eventNameForShapeDrag = 'shapeDragged';
+/* harmony export (immutable) */ __webpack_exports__["b"] = eventNameForShapeDrag;
+
+
+function initialiseGameListeners (gameElement) {
+    gameElement.addEventListener('drop', onDropOnGame);
+    gameElement.addEventListener('dragover', onDragOverGame);
+    gameElement.addEventListener('dragenter', onDragOverGame);    
+}
+
+function makeShapeDraggable (shapeElement) {
+    shapeElement.draggable = true;
+    shapeElement.addEventListener('dragstart', onShapeDragStart);
+    shapeElement.addEventListener('drag', Object(__WEBPACK_IMPORTED_MODULE_1_lodash__["throttle"]) (onShapeDrag, 100));    
+}
+
+
+
+/***/ }),
+/* 9 */
 /***/ (function(module, exports) {
 
 // Copyright Joyent, Inc. and other Node contributors.
@@ -17764,73 +18303,6 @@ function isObject(arg) {
 function isUndefined(arg) {
   return arg === void 0;
 }
-
-
-/***/ }),
-/* 9 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (immutable) */ __webpack_exports__["c"] = initialiseGameListeners;
-/* harmony export (immutable) */ __webpack_exports__["d"] = makeShapeDraggable;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_events__ = __webpack_require__(8);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_events___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_events__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_lodash__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_lodash___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_lodash__);
-
-
-
-const currentDragOffsets = {
-    left: 0,
-    top: 0
-};
-
-function onDropOnGame (e) {
-    event.preventDefault ();
-    event.stopPropagation ();
-    return false;
-}
-
-function onDragOverGame (e) {
-    e.preventDefault ();
-    return false;
-}
-
-function onShapeDragStart (e) {
-    const shape = e.target;
-    const bounds = shape.getBoundingClientRect ();
-    currentDragOffsets.left = e.clientX - bounds.left;
-    currentDragOffsets.top = e.clientY - bounds.top;
-    e.dataTransfer.effectAllowed = 'move';
-}
-
-function onShapeDrag (e) {
-    const shape = e.target;
-    const bounds = shape.getBoundingClientRect ();
-    e.target.style.left = `${e.pageX - currentDragOffsets.left}px`;
-    e.target.style.top = `${e.pageY - currentDragOffsets.top}px`;
-    emitter.emit (eventNameForShapeDrag);
-}
-
-const emitter = new __WEBPACK_IMPORTED_MODULE_0_events___default.a ();
-/* harmony export (immutable) */ __webpack_exports__["a"] = emitter;
-
-const eventNameForShapeDrag = 'shapeDragged';
-/* harmony export (immutable) */ __webpack_exports__["b"] = eventNameForShapeDrag;
-
-
-function initialiseGameListeners (gameElement) {
-    gameElement.addEventListener('drop', onDropOnGame);
-    gameElement.addEventListener('dragover', onDragOverGame);
-    gameElement.addEventListener('dragenter', onDragOverGame);    
-}
-
-function makeShapeDraggable (shapeElement) {
-    shapeElement.draggable = true;
-    shapeElement.addEventListener('dragstart', onShapeDragStart);
-    shapeElement.addEventListener('drag', Object(__WEBPACK_IMPORTED_MODULE_1_lodash__["throttle"]) (onShapeDrag, 100));    
-}
-
 
 
 /***/ })

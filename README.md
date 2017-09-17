@@ -2,6 +2,15 @@
 
 Hosted on GitHub Pages at https://danyalaytekin.github.io/many-squares/.  The built code is committed to `docs` rather than something like `dist` so that it can be served by GitHub Pages.
 
+## Possible improvements
+
+- reduce psychedelia 
+- add unit tests
+- add browser tests
+- support touch
+- support different viewports
+- performance optimisation
+
 ## Getting started locally
 
 Clone the repo, and then:
@@ -28,11 +37,3 @@ This project uses client-side ES6 and is unlikely to work in older browsers.
 
 - `options.sideLength`: the length of each side of each square
 - `options.squareCount`: the number of squares to be shown
-
-## Possible improvements
-
-- add unit tests
-- add browser tests
-- support touch
-- support different viewports
-- performance optimisation
