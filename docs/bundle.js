@@ -17345,10 +17345,7 @@ function calculate() {
         });
     }
 
-    areas.sort (function (a, b) {
-        return b.area - a.area;
-    });
-
+    areas.sort ((a, b) => b.area - a.area);
     return areas;
 }
 
