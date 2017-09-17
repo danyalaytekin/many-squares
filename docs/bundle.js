@@ -17480,9 +17480,9 @@ function findShapeGroups (shapeElements) {
 }
 
 function countPaintedPixels (canvas) {
-    return canvas.reduce (function (a1, c1) {
-        return a1 + c1.reduce (function (a2, c2) {
-            return a2 + c2;
+    return canvas.reduce (function (a0, c0) {
+        return a0 + c0.reduce (function (a1, c1) {
+            return a1 + c1;
         }, 0);
     }, 0);
 }
