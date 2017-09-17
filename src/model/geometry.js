@@ -51,6 +51,22 @@ export function findExtremitiesOfGroup (group) {
     return extremes;
 }
 
+export function createPaintableCanvasForGroup (extremes) {
+    let canvas = [];
+    
+    const canvasLimits = {
+        width: Math.floor(extremes.right - extremes.left),
+        height: Math.floor(extremes.bottom - extremes.top)
+    };
+    
+    for (let i = 0; i < canvasLimits.width; ++i) {
+        const column = new Array(canvasLimits.height).fill (0);
+        canvas.push (column);
+    }
+
+    return canvas;
+}
+
 export function countPaintedPixels (canvas) {
     return canvas.reduce (function (a0, c0) {
         return a0 + c0.reduce (function (a1, c1) {

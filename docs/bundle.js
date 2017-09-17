@@ -17209,29 +17209,17 @@ function onViewChanged () {
 }
 
 function calculate() {
-    const shapeGroups = __WEBPACK_IMPORTED_MODULE_0__model_geometry__["b" /* findShapeGroups */] (shapeElements);
+    const shapeGroups = __WEBPACK_IMPORTED_MODULE_0__model_geometry__["d" /* findShapeGroups */] (shapeElements);
     
     // For each group of shapes, find its area.
     let areas = [];
     const groupCount = shapeGroups.length;
     for (const group of shapeGroups) {
-        const extremes = findExtremitiesOfGroup (group);
-    
-        // Create a two-dimensional canvas and initialise all elements to zero.
-        const canvasLimits = {
-            width: Math.floor(extremes.right - extremes.left),
-            height: Math.floor(extremes.bottom - extremes.top)
-        };
-        let canvas = [];
-        for (let i = 0; i < canvasLimits.width; ++i) {
-            const column = new Array(canvasLimits.height).fill (0);
-            canvas.push (column);
-        }
-
-        __WEBPACK_IMPORTED_MODULE_0__model_geometry__["c" /* paintGroupOntoCanvas */] (group, canvas, extremes);
+        const extremes = __WEBPACK_IMPORTED_MODULE_0__model_geometry__["c" /* findExtremitiesOfGroup */] (group);
+        const canvas = __WEBPACK_IMPORTED_MODULE_0__model_geometry__["b" /* createPaintableCanvasForGroup */] (extremes);
+        __WEBPACK_IMPORTED_MODULE_0__model_geometry__["e" /* paintGroupOntoCanvas */] (group, canvas, extremes);
 
         const area = __WEBPACK_IMPORTED_MODULE_0__model_geometry__["a" /* countPaintedPixels */] (canvas);
-
         areas.push ({
             group: group,
             area: area
@@ -17372,10 +17360,11 @@ function setRandomPosition (element) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (immutable) */ __webpack_exports__["b"] = findShapeGroups;
-/* unused harmony export findExtremitiesOfGroup */
+/* harmony export (immutable) */ __webpack_exports__["d"] = findShapeGroups;
+/* harmony export (immutable) */ __webpack_exports__["c"] = findExtremitiesOfGroup;
+/* harmony export (immutable) */ __webpack_exports__["b"] = createPaintableCanvasForGroup;
 /* harmony export (immutable) */ __webpack_exports__["a"] = countPaintedPixels;
-/* harmony export (immutable) */ __webpack_exports__["c"] = paintGroupOntoCanvas;
+/* harmony export (immutable) */ __webpack_exports__["e"] = paintGroupOntoCanvas;
 function areElementsOverlapping (e0, e1) {
     const r0 = e0.getBoundingClientRect ();
     const r1 = e1.getBoundingClientRect ();
@@ -17427,6 +17416,22 @@ function findExtremitiesOfGroup (group) {
         }
     }
     return extremes;
+}
+
+function createPaintableCanvasForGroup (extremes) {
+    let canvas = [];
+    
+    const canvasLimits = {
+        width: Math.floor(extremes.right - extremes.left),
+        height: Math.floor(extremes.bottom - extremes.top)
+    };
+    
+    for (let i = 0; i < canvasLimits.width; ++i) {
+        const column = new Array(canvasLimits.height).fill (0);
+        canvas.push (column);
+    }
+
+    return canvas;
 }
 
 function countPaintedPixels (canvas) {

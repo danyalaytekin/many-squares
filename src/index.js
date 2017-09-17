@@ -48,23 +48,11 @@ function calculate() {
     let areas = [];
     const groupCount = shapeGroups.length;
     for (const group of shapeGroups) {
-        const extremes = findExtremitiesOfGroup (group);
-    
-        // Create a two-dimensional canvas and initialise all elements to zero.
-        const canvasLimits = {
-            width: Math.floor(extremes.right - extremes.left),
-            height: Math.floor(extremes.bottom - extremes.top)
-        };
-        let canvas = [];
-        for (let i = 0; i < canvasLimits.width; ++i) {
-            const column = new Array(canvasLimits.height).fill (0);
-            canvas.push (column);
-        }
-
+        const extremes = geometry.findExtremitiesOfGroup (group);
+        const canvas = geometry.createPaintableCanvasForGroup (extremes);
         geometry.paintGroupOntoCanvas (group, canvas, extremes);
 
         const area = geometry.countPaintedPixels (canvas);
-
         areas.push ({
             group: group,
             area: area
