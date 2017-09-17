@@ -48,29 +48,7 @@ function calculate() {
     let areas = [];
     const groupCount = shapeGroups.length;
     for (const group of shapeGroups) {
-    
-        // Find extremes.
-        let extremes = {
-            left: Number.MAX_VALUE,
-            right: 0,
-            top: Number.MAX_VALUE,
-            bottom: 0
-        };
-        for (const shape of group) {
-            const r = shape.getBoundingClientRect ();
-            if (r.left < extremes.left) {
-                extremes.left = r.left;
-            }
-            if (r.right > extremes.right) {
-                extremes.right = r.right;
-            }
-            if (r.top < extremes.top) {
-                extremes.top = r.top;
-            }
-            if (r.bottom > extremes.bottom) {
-                extremes.bottom = r.bottom;
-            }
-        }
+        const extremes = findExtremitiesOfGroup (group);
     
         // Create a two-dimensional canvas and initialise all elements to zero.
         const canvasLimits = {
@@ -83,10 +61,10 @@ function calculate() {
             canvas.push (column);
         }
 
-
         geometry.paintGroupOntoCanvas (group, canvas, extremes);
 
         const area = geometry.countPaintedPixels (canvas);
+
         areas.push ({
             group: group,
             area: area

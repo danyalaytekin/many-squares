@@ -17215,29 +17215,7 @@ function calculate() {
     let areas = [];
     const groupCount = shapeGroups.length;
     for (const group of shapeGroups) {
-    
-        // Find extremes.
-        let extremes = {
-            left: Number.MAX_VALUE,
-            right: 0,
-            top: Number.MAX_VALUE,
-            bottom: 0
-        };
-        for (const shape of group) {
-            const r = shape.getBoundingClientRect ();
-            if (r.left < extremes.left) {
-                extremes.left = r.left;
-            }
-            if (r.right > extremes.right) {
-                extremes.right = r.right;
-            }
-            if (r.top < extremes.top) {
-                extremes.top = r.top;
-            }
-            if (r.bottom > extremes.bottom) {
-                extremes.bottom = r.bottom;
-            }
-        }
+        const extremes = findExtremitiesOfGroup (group);
     
         // Create a two-dimensional canvas and initialise all elements to zero.
         const canvasLimits = {
@@ -17250,10 +17228,10 @@ function calculate() {
             canvas.push (column);
         }
 
-
         __WEBPACK_IMPORTED_MODULE_0__model_geometry__["c" /* paintGroupOntoCanvas */] (group, canvas, extremes);
 
         const area = __WEBPACK_IMPORTED_MODULE_0__model_geometry__["a" /* countPaintedPixels */] (canvas);
+
         areas.push ({
             group: group,
             area: area
@@ -17395,6 +17373,7 @@ function setRandomPosition (element) {
 
 "use strict";
 /* harmony export (immutable) */ __webpack_exports__["b"] = findShapeGroups;
+/* unused harmony export findExtremitiesOfGroup */
 /* harmony export (immutable) */ __webpack_exports__["a"] = countPaintedPixels;
 /* harmony export (immutable) */ __webpack_exports__["c"] = paintGroupOntoCanvas;
 function areElementsOverlapping (e0, e1) {
@@ -17423,6 +17402,31 @@ function findShapeGroups (shapeElements) {
     }
     while (groups.find (g => g.length === 0));
     return groups;
+}
+
+function findExtremitiesOfGroup (group) {
+    let extremes = {
+        left: Number.MAX_VALUE,
+        right: 0,
+        top: Number.MAX_VALUE,
+        bottom: 0
+    };
+    for (const shape of group) {
+        const r = shape.getBoundingClientRect ();
+        if (r.left < extremes.left) {
+            extremes.left = r.left;
+        }
+        if (r.right > extremes.right) {
+            extremes.right = r.right;
+        }
+        if (r.top < extremes.top) {
+            extremes.top = r.top;
+        }
+        if (r.bottom > extremes.bottom) {
+            extremes.bottom = r.bottom;
+        }
+    }
+    return extremes;
 }
 
 function countPaintedPixels (canvas) {

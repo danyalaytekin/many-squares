@@ -26,6 +26,31 @@ export function findShapeGroups (shapeElements) {
     return groups;
 }
 
+export function findExtremitiesOfGroup (group) {
+    let extremes = {
+        left: Number.MAX_VALUE,
+        right: 0,
+        top: Number.MAX_VALUE,
+        bottom: 0
+    };
+    for (const shape of group) {
+        const r = shape.getBoundingClientRect ();
+        if (r.left < extremes.left) {
+            extremes.left = r.left;
+        }
+        if (r.right > extremes.right) {
+            extremes.right = r.right;
+        }
+        if (r.top < extremes.top) {
+            extremes.top = r.top;
+        }
+        if (r.bottom > extremes.bottom) {
+            extremes.bottom = r.bottom;
+        }
+    }
+    return extremes;
+}
+
 export function countPaintedPixels (canvas) {
     return canvas.reduce (function (a0, c0) {
         return a0 + c0.reduce (function (a1, c1) {
