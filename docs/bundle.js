@@ -17163,7 +17163,7 @@
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lodash__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lodash___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_lodash__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ui_table_renderer__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ui_table_renderer__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ui_shape_builder__ = __webpack_require__(5);
 
 
@@ -17239,7 +17239,7 @@ function build () {
 
         shapeElement.draggable = true;
         shapeElement.addEventListener('dragstart', onDragStart);
-        shapeElement.addEventListener('drag', __WEBPACK_IMPORTED_MODULE_0_lodash___default.a.throttle (onDrag, 10));    
+        shapeElement.addEventListener('drag', __WEBPACK_IMPORTED_MODULE_0_lodash___default.a.throttle (onDrag, 100));
         
         gameElement.appendChild (shapeElement);
         __WEBPACK_IMPORTED_MODULE_2__ui_shape_builder__["c" /* setRandomPosition */] (shapeElement);
@@ -17419,7 +17419,23 @@ module.exports = function(module) {
 
 
 /***/ }),
-/* 4 */,
+/* 4 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (immutable) */ __webpack_exports__["a"] = render;
+function render (areas) {
+    let rowHtml = '';
+    rowHtml += `<tr><th>Group containing</th><th>Area (pixels squared)</th></tr>`;
+    for (let i = 0; i < areas.length; ++i) {
+        rowHtml += `<tr><td>${areas[i].group[0].innerHTML}</td><td>${areas[i].area}</td></tr>`;
+    }
+    const tableElement = document.getElementById ('results');
+    tableElement.innerHTML = rowHtml;
+}
+
+
+/***/ }),
 /* 5 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -17459,24 +17475,6 @@ function setRandomPosition (element) {
     const position = generateRandomPosition ();
     element.style.left = `${position.x}px`;
     element.style.top = `${position.y}px`;
-}
-
-
-/***/ }),
-/* 6 */,
-/* 7 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (immutable) */ __webpack_exports__["a"] = render;
-function render (areas) {
-    let rowHtml = '';
-    rowHtml += `<tr><th>Group containing</th><th>Area (pixels squared)</th></tr>`;
-    for (let i = 0; i < areas.length; ++i) {
-        rowHtml += `<tr><td>${areas[i].group[0].innerHTML}</td><td>${areas[i].area}</td></tr>`;
-    }
-    const tableElement = document.getElementById ('results');
-    tableElement.innerHTML = rowHtml;
 }
 
 
