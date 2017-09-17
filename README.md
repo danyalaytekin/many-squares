@@ -2,7 +2,7 @@
 
 Hosted on GitHub Pages at https://danyalaytekin.github.io/many-squares/.  The built code is committed to `docs` rather than something like `dist` so that it can be served by GitHub Pages.
 
-## Getting started
+## Getting started locally
 
 Clone the repo, and then:
 
@@ -12,6 +12,12 @@ nvm install
 npm install
 npm run build
 open docs/index.html
+```
+
+### Run tests
+
+```
+npm test
 ```
 
 ## Browser support
