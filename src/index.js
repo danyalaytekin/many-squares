@@ -72,7 +72,7 @@ function build () {
 
         shapeElement.draggable = true;
         shapeElement.addEventListener('dragstart', onDragStart);
-        shapeElement.addEventListener('drag', _.throttle (onDrag, 10));    
+        shapeElement.addEventListener('drag', _.throttle (onDrag, 100));
         
         gameElement.appendChild (shapeElement);
         shapeBuilder.setRandomPosition (shapeElement);
