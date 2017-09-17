@@ -17204,16 +17204,14 @@ function initialise () {
 }
 
 function onViewChanged () {
-    const areas = calculate ();
+    const areas = findAreas ();
     __WEBPACK_IMPORTED_MODULE_1__ui_table_renderer__["a" /* render */] (areas);
 }
 
-function calculate() {
-    const shapeGroups = __WEBPACK_IMPORTED_MODULE_0__model_geometry__["d" /* findShapeGroups */] (shapeElements);
-    
-    // For each group of shapes, find its area.
+function findAreas() {
     let areas = [];
-    const groupCount = shapeGroups.length;
+
+    const shapeGroups = __WEBPACK_IMPORTED_MODULE_0__model_geometry__["d" /* findShapeGroups */] (shapeElements);
     for (const group of shapeGroups) {
         const extremes = __WEBPACK_IMPORTED_MODULE_0__model_geometry__["c" /* findExtremitiesOfGroup */] (group);
         const canvas = __WEBPACK_IMPORTED_MODULE_0__model_geometry__["b" /* createPaintableCanvasForGroup */] (extremes);

@@ -37,16 +37,14 @@ function initialise () {
 }
 
 function onViewChanged () {
-    const areas = calculate ();
+    const areas = findAreas ();
     tableRenderer.render (areas);
 }
 
-function calculate() {
-    const shapeGroups = geometry.findShapeGroups (shapeElements);
-    
-    // For each group of shapes, find its area.
+function findAreas() {
     let areas = [];
-    const groupCount = shapeGroups.length;
+
+    const shapeGroups = geometry.findShapeGroups (shapeElements);
     for (const group of shapeGroups) {
         const extremes = geometry.findExtremitiesOfGroup (group);
         const canvas = geometry.createPaintableCanvasForGroup (extremes);
