@@ -17184,7 +17184,7 @@ const currentDragOffsets = {
     top: 0
 };
 
-let shapes;
+let shapeElements;
 
 function onDragStart (e) {
     const shape = e.target;
@@ -17228,7 +17228,7 @@ function initialiseGameListeners (gameElement) {
 }
 
 function build () {
-    shapes = [];
+    shapeElements = [];
 
     const gameElement = document.getElementById ('game');
     gameElement.innerHTML = '';
@@ -17244,7 +17244,7 @@ function build () {
         gameElement.appendChild (shapeElement);
         __WEBPACK_IMPORTED_MODULE_2__ui_shape_builder__["c" /* setRandomPosition */] (shapeElement);
         
-        shapes.push ([shapeElement]);
+        shapeElements.push (shapeElement);
     }
 
     initialiseGameListeners (gameElement); 
@@ -17256,7 +17256,7 @@ function calculate() {
     // Find groups of shapes.
     let groupsOfShapes = [];
     for (let i = 0; i < options.shapeCount; ++i) {
-        const element1 = document.getElementById (`shape${i}`);
+        const element1 = shapeElements[i];
 
         let group = groupsOfShapes.find (function (element) {
             return element.indexOf (element1) > -1;
@@ -17267,7 +17267,7 @@ function calculate() {
         }
 
         for (let j = i + 1; j < options.shapeCount; ++j) {
-            const element2 = document.getElementById (`shape${j}`);
+            const element2 = shapeElements[j];
 
             if (overlaps (element1, element2)) {
                 group.push(element2);
