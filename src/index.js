@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import * as overlapModel from './model/overlap-model';
+import * as geometry from './model/geometry';
 import * as tableRenderer from './ui/table-renderer';
 import * as shapeBuilder from './ui/shape-builder';
 
@@ -43,13 +43,6 @@ function onDrop (e) {
     return false;
 }
 
-function overlaps (element1, element2) {
-    const r1 = element1.getBoundingClientRect ();
-    const r2 = element2.getBoundingClientRect ();
-    const separated = r1.right < r2.left || r1.left > r2.right || r1.bottom < r2.top || r1.top > r2.bottom;
-    return ! separated;
-}
-
 function onDragOverGame (e) {
     e.preventDefault ();
     return false;
@@ -85,13 +78,13 @@ function build () {
 }
 
 function calculate() {
-    const groupsOfShapes = overlapModel.findGroupsOfShapes (shapeElements);
+    const shapeGroups = geometry.findShapeGroups (shapeElements);
     
     // For each group of shapes, find its area.
     let areas = [];
-    const groupCount = groupsOfShapes.length;
+    const groupCount = shapeGroups.length;
     for (let i = 0; i < groupCount; ++i) {
-        const group = groupsOfShapes[i];
+        const group = shapeGroups[i];
     
         // Find extremes.
         let extremes = {
@@ -145,7 +138,7 @@ function calculate() {
             }
         }
 
-        const area = overlapModel.countPaintedPixels (canvas);
+        const area = geometry.countPaintedPixels (canvas);
         areas.push ({
             group: group,
             area: area

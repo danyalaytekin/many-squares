@@ -17163,7 +17163,7 @@
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lodash__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lodash___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_lodash__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__model_overlap_model__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__model_geometry__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ui_table_renderer__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ui_shape_builder__ = __webpack_require__(5);
 
@@ -17211,13 +17211,6 @@ function onDrop (e) {
     return false;
 }
 
-function overlaps (element1, element2) {
-    const r1 = element1.getBoundingClientRect ();
-    const r2 = element2.getBoundingClientRect ();
-    const separated = r1.right < r2.left || r1.left > r2.right || r1.bottom < r2.top || r1.top > r2.bottom;
-    return ! separated;
-}
-
 function onDragOverGame (e) {
     e.preventDefault ();
     return false;
@@ -17253,13 +17246,13 @@ function build () {
 }
 
 function calculate() {
-    const groupsOfShapes = __WEBPACK_IMPORTED_MODULE_1__model_overlap_model__["b" /* findGroupsOfShapes */] (shapeElements);
+    const shapeGroups = __WEBPACK_IMPORTED_MODULE_1__model_geometry__["b" /* findShapeGroups */] (shapeElements);
     
     // For each group of shapes, find its area.
     let areas = [];
-    const groupCount = groupsOfShapes.length;
+    const groupCount = shapeGroups.length;
     for (let i = 0; i < groupCount; ++i) {
-        const group = groupsOfShapes[i];
+        const group = shapeGroups[i];
     
         // Find extremes.
         let extremes = {
@@ -17313,7 +17306,7 @@ function calculate() {
             }
         }
 
-        const area = __WEBPACK_IMPORTED_MODULE_1__model_overlap_model__["a" /* countPaintedPixels */] (canvas);
+        const area = __WEBPACK_IMPORTED_MODULE_1__model_geometry__["a" /* countPaintedPixels */] (canvas);
         areas.push ({
             group: group,
             area: area
@@ -17451,34 +17444,39 @@ function setRandomPosition (element) {
 
 
 /***/ }),
-/* 6 */
+/* 6 */,
+/* 7 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (immutable) */ __webpack_exports__["b"] = findGroupsOfShapes;
+/* harmony export (immutable) */ __webpack_exports__["b"] = findShapeGroups;
 /* harmony export (immutable) */ __webpack_exports__["a"] = countPaintedPixels;
-function findGroupsOfShapes (shapeElements) {
-    let groupsOfShapes = [];
-    for (let i = 0; i < shapeElements.length; ++i) {
-        const element1 = shapeElements[i];
+function areElementsOverlapping (e0, e1) {
+    const r0 = e0.getBoundingClientRect ();
+    const r1 = e1.getBoundingClientRect ();
+    const separated = r0.right < r1.left || r0.left > r1.right || r0.bottom < r1.top || r0.top > r1.bottom;
+    return ! separated;
+}
 
-        let group = groupsOfShapes.find (function (element) {
-            return element.indexOf (element1) > -1;
-        });
-        if (group === undefined) {
-            group = [element1];
-            groupsOfShapes.push (group);
-        }
+function areGroupsOverlapping (g0, g1) {
+    return g0.some (s0 => g1.some (s1 => areElementsOverlapping (s1, s0)));
+}
 
-        for (let j = i + 1; j < shapeElements.length; ++j) {
-            const element2 = shapeElements[j];
-
-            if (overlaps (element1, element2)) {
-                group.push(element2);
+function findShapeGroups (shapeElements) {
+    let groups = shapeElements.map (shape => [shape]);
+    do {
+        groups = groups.filter (g => g.length > 0);
+        for (let i = 0; i < groups.length; ++i) {
+            for (let j = i + 1; j < groups.length; ++j) {
+                if (areGroupsOverlapping (groups[i], groups[j])) {
+                    groups[i] = groups[i].concat (groups[j]);
+                    groups[j].length = 0;
+                }
             }
         }
     }
-    return groupsOfShapes;
+    while (groups.find (g => g.length === 0));
+    return groups;
 }
 
 function countPaintedPixels (canvas) {
