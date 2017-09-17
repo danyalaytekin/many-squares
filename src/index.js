@@ -109,9 +109,9 @@ function calculate() {
     }
     
     // For each group of shapes, find its area.
-    let groupCount = groupsOfShapes.length;
+    const groupCount = groupsOfShapes.length;
     for (let i = 0; i < groupCount; ++i) {
-        let group = groupsOfShapes[i];
+        const group = groupsOfShapes[i];
     
         // Find extremes.
         let extremes = {
@@ -138,7 +138,7 @@ function calculate() {
         }
     
         // Create a two-dimensional canvas and initialise all elements to zero.
-        let canvasLimits = {
+        const canvasLimits = {
             width: Math.floor(extremes.right - extremes.left),
             height: Math.floor(extremes.bottom - extremes.top)
         };
@@ -150,8 +150,8 @@ function calculate() {
         
         // Paint each shape onto the canvas.
         for (let k = 0; k < group.length; ++k) {
-            let shapeElement = group[k];
-            let rect = shapeElement.getBoundingClientRect ();
+            const shapeElement = group[k];
+            const rect = shapeElement.getBoundingClientRect ();
             const r = {
                 left: Math.floor(rect.left - extremes.left),
                 right: Math.floor(rect.right - extremes.left),
@@ -166,7 +166,7 @@ function calculate() {
         }
 
         // Count the number of ones on the canvas.
-        let area = canvas.reduce (function (a1, c1) {
+        const area = canvas.reduce (function (a1, c1) {
             return a1 + c1.reduce (function (a2, c2) {
                 return a2 + c2;
             }, 0);
