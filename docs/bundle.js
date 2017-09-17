@@ -17318,11 +17318,11 @@ function findExtremitiesOfGroup (group) {
         if (r.left < extremes.left) {
             extremes.left = r.left;
         }
-        if (r.right > extremes.right) {
-            extremes.right = r.right;
-        }
         if (r.top < extremes.top) {
             extremes.top = r.top;
+        }
+        if (r.right > extremes.right) {
+            extremes.right = r.right;
         }
         if (r.bottom > extremes.bottom) {
             extremes.bottom = r.bottom;
@@ -17338,7 +17338,7 @@ function createPaintableCanvasForGroup (extremes) {
         width: Math.floor(extremes.right - extremes.left),
         height: Math.floor(extremes.bottom - extremes.top)
     };
-    
+
     for (let i = 0; i < canvasLimits.width; ++i) {
         const column = new Array(canvasLimits.height).fill (0);
         canvas.push (column);
