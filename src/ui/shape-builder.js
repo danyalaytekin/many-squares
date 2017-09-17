@@ -22,7 +22,7 @@ export function build (index) {
     element.style.width = `${sideLength}px`;
     element.style.height = element.style.width;
     element.style.lineHeight = element.style.width;
-    element.innerHTML = `Square ${index}`;
+    element.innerHTML = `Square ${index + 1}`;
     return element;
 }
 

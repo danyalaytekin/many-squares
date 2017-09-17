@@ -17379,8 +17379,7 @@ function paintGroupOntoCanvas (group, canvas, extremes) {
 "use strict";
 /* harmony export (immutable) */ __webpack_exports__["a"] = render;
 function render (areas) {
-    let rowHtml = '';
-    rowHtml += `<tr><th>Group containing</th><th>Area (pixels squared)</th></tr>`;
+    let rowHtml = `<tr><th>Group containing</th><th>Area (pixels squared)</th></tr>`;
     for (let i = 0; i < areas.length; ++i) {
         rowHtml += `<tr><td>${areas[i].group[0].innerHTML}</td><td>${areas[i].area}</td></tr>`;
     }
@@ -17426,7 +17425,7 @@ function build (index) {
     element.style.width = `${sideLength}px`;
     element.style.height = element.style.width;
     element.style.lineHeight = element.style.width;
-    element.innerHTML = `Square ${index}`;
+    element.innerHTML = `Square ${index + 1}`;
     return element;
 }
 
