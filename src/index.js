@@ -1,6 +1,7 @@
 import * as geometry from './model/geometry';
 import * as tableRenderer from './ui/table-renderer';
 import * as shapeBuilder from './ui/shape-builder';
+import * as listeners from './ui/listeners';
 
 const options = {
     shapeCount: 7,
@@ -12,46 +13,7 @@ const limits = {
     height: 400
 };
 
-const currentDragOffsets = {
-    left: 0,
-    top: 0
-};
-
 let shapeElements;
-
-function onDragStart (e) {
-    const shape = e.target;
-    const bounds = shape.getBoundingClientRect ();
-    currentDragOffsets.left = e.clientX - bounds.left;
-    currentDragOffsets.top = e.clientY - bounds.top;
-    e.dataTransfer.effectAllowed = 'move';
-}
-
-function onDrag (e) {
-    const shape = e.target;
-    const bounds = shape.getBoundingClientRect ();
-    e.target.style.left = `${e.pageX - currentDragOffsets.left}px`;
-    e.target.style.top = `${e.pageY - currentDragOffsets.top}px`;
-    const areas = calculate ();
-    tableRenderer.render (areas);
-}
-
-function onDrop (e) {
-    event.preventDefault ();
-    event.stopPropagation ();
-    return false;
-}
-
-function onDragOverGame (e) {
-    e.preventDefault ();
-    return false;
-}
-
-function initialiseGameListeners (gameElement) {
-    gameElement.addEventListener('drop', onDrop);
-    gameElement.addEventListener('dragover', onDragOverGame);
-    gameElement.addEventListener('dragenter', onDragOverGame);    
-}
 
 function build () {
     shapeElements = [];
@@ -62,18 +24,21 @@ function build () {
     for (let i = 0; i < options.shapeCount; ++i) {
         const shapeElement = shapeBuilder.build (i);
         shapeElement.id = `shape${i}`;
+        listeners.makeShapeDraggable (shapeElement);
 
-        shapeElement.draggable = true;
-        shapeElement.addEventListener('dragstart', onDragStart);
-        shapeElement.addEventListener('drag', _.throttle (onDrag, 100));
-        
         gameElement.appendChild (shapeElement);
         shapeBuilder.setRandomPosition (shapeElement);
         
         shapeElements.push (shapeElement);
     }
 
-    initialiseGameListeners (gameElement);
+    listeners.initialiseGameListeners (gameElement);
+    listeners.emitter.on(listeners.eventNameForShapeDrag, onViewChanged);
+}
+
+function onViewChanged () {
+    const areas = calculate ();
+    tableRenderer.render (areas);
 }
 
 function calculate() {
@@ -154,6 +119,4 @@ shapeBuilder.init ({
 });
 
 build ();
-
-const areas = calculate();
-tableRenderer.render (areas);
+onViewChanged ();
