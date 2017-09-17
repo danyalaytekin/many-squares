@@ -47,8 +47,7 @@ function calculate() {
     // For each group of shapes, find its area.
     let areas = [];
     const groupCount = shapeGroups.length;
-    for (let i = 0; i < groupCount; ++i) {
-        const group = shapeGroups[i];
+    for (const group of shapeGroups) {
     
         // Find extremes.
         let extremes = {
@@ -57,8 +56,7 @@ function calculate() {
             top: Number.MAX_VALUE,
             bottom: 0
         };
-        for (let j = 0; j < group.length; ++j) {
-            const shape = group[j];
+        for (const shape of group) {
             const r = shape.getBoundingClientRect ();
             if (r.left < extremes.left) {
                 extremes.left = r.left;
