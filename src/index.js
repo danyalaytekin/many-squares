@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import * as geometry from './model/geometry';
 import * as tableRenderer from './ui/table-renderer';
 import * as shapeBuilder from './ui/shape-builder';
