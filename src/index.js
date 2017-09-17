@@ -83,12 +83,9 @@ function build () {
     initialiseGameListeners (gameElement); 
 }
 
-function calculate() {
-    let areas = [];
-
-    // Find groups of shapes.
+function findGroupsOfShapes (shapeElements) {
     let groupsOfShapes = [];
-    for (let i = 0; i < options.shapeCount; ++i) {
+    for (let i = 0; i < shapeElements.length; ++i) {
         const element1 = shapeElements[i];
 
         let group = groupsOfShapes.find (function (element) {
@@ -99,7 +96,7 @@ function calculate() {
             groupsOfShapes.push (group);
         }
 
-        for (let j = i + 1; j < options.shapeCount; ++j) {
+        for (let j = i + 1; j < shapeElements.length; ++j) {
             const element2 = shapeElements[j];
 
             if (overlaps (element1, element2)) {
@@ -107,6 +104,12 @@ function calculate() {
             }
         }
     }
+    return groupsOfShapes;
+}
+
+function calculate() {
+    let areas = [];
+    const groupsOfShapes = findGroupsOfShapes (shapeElements);
     
     // For each group of shapes, find its area.
     const groupCount = groupsOfShapes.length;
