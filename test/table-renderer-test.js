@@ -49,8 +49,7 @@ describe('Table renderer', function () {
                         }
                     ],
                     area: 2000
-                }
-                
+                },                
             ];
             tableRenderer.render (areas, this.tableElement);
             assert.strictEqual (
@@ -58,5 +57,28 @@ describe('Table renderer', function () {
                 expectedHeaderRow + `<tr><td>label1</td><td>1000</td></tr><tr><td>label2</td><td>2000</td></tr>`
             );
         });
+
+        it('should sort the names of elements, when there are multiple elements in a group', function () {
+            const areas = [
+                {
+                    group: [
+                        {
+                            innerHTML: 'Label 2'
+                        },
+                        {
+                            innerHTML: 'Label 1'
+                        }
+                    ],
+                    area: 3000
+                }
+            ];
+            tableRenderer.render (areas, this.tableElement);
+            assert.strictEqual (
+                this.tableElement.innerHTML, 
+                expectedHeaderRow + `<tr><td>Label 1<br>Label 2</td><td>3000</td></tr>`
+            );
+            
+            // TODO: This method will run into a problem if the number of squares present is 10 or more.
+        })
     });
 });
