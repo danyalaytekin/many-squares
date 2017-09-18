@@ -1,5 +1,7 @@
 # many-squares
 
+[![Build Status](https://travis-ci.org/danyalaytekin/many-squares.svg?branch=master)](https://travis-ci.org/danyalaytekin/many-squares)
+
 Hosted on GitHub Pages at https://danyalaytekin.github.io/many-squares/.  The built code is committed to `docs` rather than something like `dist` so that it can be served by GitHub Pages.
 
 ## Possible improvements
