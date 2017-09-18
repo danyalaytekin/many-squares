@@ -1,5 +1,5 @@
-const assert = require('assert');
-// const shapeBuilder = require('../src/ui/shape-builder');
+import assert from 'assert';
+// import * as shapeBuilder from '../src/ui/shape-builder';
 
 describe('Shape builder', function () {
     describe('#setRandomPosition(element)', function() {
