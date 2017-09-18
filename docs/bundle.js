@@ -152,7 +152,7 @@ function initialise () {
     gameElement.innerHTML = '';
     
     for (let i = 0; i < options.shapeCount; ++i) {
-        const shapeElement = __WEBPACK_IMPORTED_MODULE_2__ui_shape_builder__["b" /* build */] (i);
+        const shapeElement = __WEBPACK_IMPORTED_MODULE_2__ui_shape_builder__["a" /* build */] (i);
         shapeElement.id = `shape${i}`;
         __WEBPACK_IMPORTED_MODULE_3__ui_listeners__["d" /* makeShapeDraggable */] (shapeElement);
 
@@ -169,9 +169,7 @@ function initialise () {
 function onViewChanged () {
     const areas = findAreas ();
     __WEBPACK_IMPORTED_MODULE_1__ui_table_renderer__["a" /* render */] (areas);
-    for (const area of areas) {
-        __WEBPACK_IMPORTED_MODULE_2__ui_shape_builder__["a" /* applyRandomColourToGroup */] (area.group);
-    }
+    areas.forEach ((area, index) => __WEBPACK_IMPORTED_MODULE_2__ui_shape_builder__["c" /* setGroupColour */] (index, area.group));
 }
 
 function findAreas() {
@@ -194,7 +192,7 @@ function findAreas() {
     return areas;
 }
 
-__WEBPACK_IMPORTED_MODULE_2__ui_shape_builder__["c" /* init */] ({
+__WEBPACK_IMPORTED_MODULE_2__ui_shape_builder__["b" /* init */] ({
     sideLength: options.sideLength,
     limits
 });
@@ -328,10 +326,10 @@ function render (areas) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (immutable) */ __webpack_exports__["c"] = init;
-/* harmony export (immutable) */ __webpack_exports__["b"] = build;
+/* harmony export (immutable) */ __webpack_exports__["b"] = init;
+/* harmony export (immutable) */ __webpack_exports__["a"] = build;
 /* harmony export (immutable) */ __webpack_exports__["d"] = setRandomPosition;
-/* harmony export (immutable) */ __webpack_exports__["a"] = applyRandomColourToGroup;
+/* harmony export (immutable) */ __webpack_exports__["c"] = setGroupColour;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lodash__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lodash___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_lodash__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_randomcolor__ = __webpack_require__(7);
@@ -348,6 +346,10 @@ function generateRandomPosition () {
         y: Math.random () * (limits.height - sideLength)
     };
 };
+
+function getColourSeedFromGroupIndex (groupIndex) {
+    return groupIndex * 1000000000;
+}
 
 function init (options) {
     limits = options.limits;
@@ -370,11 +372,13 @@ function setRandomPosition (element) {
     element.style.top = `${position.y}px`;
 }
 
-function applyRandomColourToGroup (elements) {
-    const backgroundColour = __WEBPACK_IMPORTED_MODULE_1_randomcolor___default() ();
-    for (const element of elements) {
+function setGroupColour (groupIndex, group) {
+    const backgroundColour = __WEBPACK_IMPORTED_MODULE_1_randomcolor___default() ({
+        seed: getColourSeedFromGroupIndex(groupIndex)
+    });
+    for (const element of group) {
         element.style.backgroundColor = backgroundColour;
-    } 
+    }
 }
 
 /***/ }),

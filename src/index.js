@@ -39,9 +39,7 @@ function initialise () {
 function onViewChanged () {
     const areas = findAreas ();
     tableRenderer.render (areas);
-    for (const area of areas) {
-        shapeBuilder.applyRandomColourToGroup (area.group);
-    }
+    areas.forEach ((area, index) => shapeBuilder.setGroupColour (index, area.group));
 }
 
 function findAreas() {

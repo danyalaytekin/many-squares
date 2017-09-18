@@ -4,7 +4,6 @@ Hosted on GitHub Pages at https://danyalaytekin.github.io/many-squares/.  The bu
 
 ## Possible improvements
 
-- reduce psychedelia 
 - add unit tests
 - add browser tests
 - support touch

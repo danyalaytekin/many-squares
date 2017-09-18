@@ -11,6 +11,10 @@ function generateRandomPosition () {
     };
 };
 
+function getColourSeedFromGroupIndex (groupIndex) {
+    return groupIndex * 1000000000;
+}
+
 export function init (options) {
     limits = options.limits;
     sideLength = options.sideLength;
@@ -32,9 +36,11 @@ export function setRandomPosition (element) {
     element.style.top = `${position.y}px`;
 }
 
-export function applyRandomColourToGroup (elements) {
-    const backgroundColour = randomcolor ();
-    for (const element of elements) {
+export function setGroupColour (groupIndex, group) {
+    const backgroundColour = randomcolor ({
+        seed: getColourSeedFromGroupIndex(groupIndex)
+    });
+    for (const element of group) {
         element.style.backgroundColor = backgroundColour;
-    } 
+    }
 }
