@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import randomcolor from 'randomcolor';
 
 let limits;
