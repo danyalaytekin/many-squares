@@ -17,14 +17,20 @@ As the project currently uses client-side ES6 without transpilation, it's unlike
 
 ## Getting started locally
 
+### Install
+
 Clone the repo, and then:
 
 ```
 brew install nvm
 nvm install
 npm install
+```
+
+### Build
+
+```
 npm run build
-open docs/index.html
 ```
 
 ### Run tests
