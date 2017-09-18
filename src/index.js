@@ -54,10 +54,7 @@ function findAreas() {
         geometry.paintGroupOntoCanvas (group, canvas, extremes);
 
         const area = geometry.countPaintedPixels (canvas);
-        areas.push ({
-            group: group,
-            area: area
-        });
+        areas.push ({ group, area });
     }
 
     areas.sort ((a, b) => b.area - a.area);

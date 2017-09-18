@@ -184,10 +184,7 @@ function findAreas() {
         __WEBPACK_IMPORTED_MODULE_0__model_geometry__["e" /* paintGroupOntoCanvas */] (group, canvas, extremes);
 
         const area = __WEBPACK_IMPORTED_MODULE_0__model_geometry__["a" /* countPaintedPixels */] (canvas);
-        areas.push ({
-            group: group,
-            area: area
-        });
+        areas.push ({ group, area });
     }
 
     areas.sort ((a, b) => b.area - a.area);
@@ -17955,8 +17952,6 @@ const currentDragOffsets = {
 };
 
 function onDropOnGame (e) {
-    event.preventDefault ();
-    event.stopPropagation ();
     return false;
 }
 
@@ -17983,6 +17978,7 @@ function onShapeDrag (e) {
 
 const emitter = new __WEBPACK_IMPORTED_MODULE_0_events___default.a ();
 /* harmony export (immutable) */ __webpack_exports__["a"] = emitter;
+
 
 const eventNameForShapeDrag = 'shapeDragged';
 /* harmony export (immutable) */ __webpack_exports__["b"] = eventNameForShapeDrag;
