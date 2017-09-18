@@ -20,9 +20,7 @@ let shapeElements;
 function initialise () {
     shapeElements = [];
 
-    const gameElement = document.getElementById ('game');
-    gameElement.innerHTML = '';
-    
+    const gameElement = document.getElementById ('game');    
     for (let i = 0; i < options.shapeCount; ++i) {
         const shapeElement = shapeBuilder.build (i);
         shapeElement.id = `shape${i}`;
