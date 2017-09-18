@@ -48,3 +48,4 @@ This project uses client-side ES6 and is unlikely to work in older browsers.
 
 - `options.sideLength`: the length of each side of each square
 - `options.squareCount`: the number of squares to be shown
+- `options.dragEventThrottlePeriod`: the minimum period, in milliseconds, between the recalculation of areas
