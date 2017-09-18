@@ -58,6 +58,5 @@ describe('Table renderer', function () {
                 expectedHeaderRow + `<tr><td>label1</td><td>1000</td></tr><tr><td>label2</td><td>2000</td></tr>`
             );
         });
-
     });
 });
