@@ -14,7 +14,7 @@ describe('Table renderer', function () {
             assert.strictEqual (this.tableElement.innerHTML, expectedHeaderRow);
         });
 
-        it('should also render one content row, when one area is supplied', function () {
+        it('should render one content row, when one area is supplied', function () {
             const areas = [
                 {
                     group: [
@@ -31,5 +31,33 @@ describe('Table renderer', function () {
                 expectedHeaderRow + `<tr><td>label</td><td>1000</td></tr>`
             );
         });
+
+        it('should render two content rows, when two areas are supplied', function () {
+            const areas = [
+                {
+                    group: [
+                        {
+                            innerHTML: 'label1'
+                        }
+                    ],
+                    area: 1000
+                },
+                {
+                    group: [
+                        {
+                            innerHTML: 'label2'
+                        }
+                    ],
+                    area: 2000
+                }
+                
+            ];
+            tableRenderer.render (areas, this.tableElement);
+            assert.strictEqual (
+                this.tableElement.innerHTML, 
+                expectedHeaderRow + `<tr><td>label1</td><td>1000</td></tr><tr><td>label2</td><td>2000</td></tr>`
+            );
+        });
+
     });
 });
