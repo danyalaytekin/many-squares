@@ -7,8 +7,6 @@ const currentDragOffsets = {
 };
 
 function onDropOnGame (e) {
-    event.preventDefault ();
-    event.stopPropagation ();
     return false;
 }
 
@@ -34,6 +32,7 @@ function onShapeDrag (e) {
 }
 
 export const emitter = new EventEmitter ();
+
 export const eventNameForShapeDrag = 'shapeDragged';
 
 export function initialiseGameListeners (gameElement) {
