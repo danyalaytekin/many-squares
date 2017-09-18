@@ -6,9 +6,8 @@ Hosted on GitHub Pages at https://danyalaytekin.github.io/many-squares/.  The bu
 
 ## Possible improvements
 
-- add unit tests
-- add browser tests
-- support touch
+- improve layout
+- better mobile/touch support
 - support different viewports
 
 ## Getting started locally
