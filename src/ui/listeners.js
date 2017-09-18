@@ -42,9 +42,9 @@ export function initialiseGameListeners (gameElement) {
     gameElement.addEventListener('dragenter', onDragOverGame);    
 }
 
-export function makeShapeDraggable (shapeElement) {
+export function makeShapeDraggable (shapeElement, eventThrottlePeriod) {
     shapeElement.draggable = true;
     shapeElement.addEventListener('dragstart', onShapeDragStart);
-    shapeElement.addEventListener('drag', throttle (onShapeDrag, 100));    
+    shapeElement.addEventListener('drag', throttle (onShapeDrag, eventThrottlePeriod));    
 }
 

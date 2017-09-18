@@ -135,7 +135,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 const options = {
     shapeCount: 7,
-    sideLength: 150
+    sideLength: 150,
+    dragEventThrottlePeriod: 100
 };
 
 const limits = {
@@ -154,7 +155,7 @@ function initialise () {
     for (let i = 0; i < options.shapeCount; ++i) {
         const shapeElement = __WEBPACK_IMPORTED_MODULE_2__ui_shape_builder__["a" /* build */] (i);
         shapeElement.id = `shape${i}`;
-        __WEBPACK_IMPORTED_MODULE_3__ui_listeners__["d" /* makeShapeDraggable */] (shapeElement);
+        __WEBPACK_IMPORTED_MODULE_3__ui_listeners__["d" /* makeShapeDraggable */] (shapeElement, options.dragEventThrottlePeriod);
 
         gameElement.appendChild (shapeElement);
         __WEBPACK_IMPORTED_MODULE_2__ui_shape_builder__["d" /* setRandomPosition */] (shapeElement);
@@ -17992,10 +17993,10 @@ function initialiseGameListeners (gameElement) {
     gameElement.addEventListener('dragenter', onDragOverGame);    
 }
 
-function makeShapeDraggable (shapeElement) {
+function makeShapeDraggable (shapeElement, eventThrottlePeriod) {
     shapeElement.draggable = true;
     shapeElement.addEventListener('dragstart', onShapeDragStart);
-    shapeElement.addEventListener('drag', __WEBPACK_IMPORTED_MODULE_1_lodash_throttle___default() (onShapeDrag, 100));    
+    shapeElement.addEventListener('drag', __WEBPACK_IMPORTED_MODULE_1_lodash_throttle___default() (onShapeDrag, eventThrottlePeriod));    
 }
 
 

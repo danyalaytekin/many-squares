@@ -5,7 +5,8 @@ import * as listeners from './ui/listeners';
 
 const options = {
     shapeCount: 7,
-    sideLength: 150
+    sideLength: 150,
+    dragEventThrottlePeriod: 100
 };
 
 const limits = {
@@ -24,7 +25,7 @@ function initialise () {
     for (let i = 0; i < options.shapeCount; ++i) {
         const shapeElement = shapeBuilder.build (i);
         shapeElement.id = `shape${i}`;
-        listeners.makeShapeDraggable (shapeElement);
+        listeners.makeShapeDraggable (shapeElement, options.dragEventThrottlePeriod);
 
         gameElement.appendChild (shapeElement);
         shapeBuilder.setRandomPosition (shapeElement);
