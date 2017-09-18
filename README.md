@@ -27,6 +27,18 @@ open docs/index.html
 npm test
 ```
 
+### Open page locally
+
+```
+npm run open
+```
+
+### Watch local filesystem for changes and rebuild
+
+```
+npm run watch
+```
+
 ## Browser support
 
 This project uses client-side ES6 and is unlikely to work in older browsers.
