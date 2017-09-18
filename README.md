@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/danyalaytekin/many-squares.svg?branch=master)](https://travis-ci.org/danyalaytekin/many-squares)
 
-This project is [deployed onto GitHub Pages](https://danyalaytekin.github.io/many-squares).  Deployable assets are in `docs`, rather than the usual `dist`; this is because `docs` is the default location for GitHub Pages. The project's tests [run on Travis]((https://travis-ci.org/danyalaytekin/many-squares)) after each commit.
+This project is [deployed onto GitHub Pages](https://danyalaytekin.github.io/many-squares).  Deployable assets are in `docs`, rather than the usual `dist`; this is because `docs` is the default location for GitHub Pages. The project's tests [run on Travis](https://travis-ci.org/danyalaytekin/many-squares) after each commit.
 
 ## Possible improvements
 
