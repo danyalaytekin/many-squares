@@ -1,5 +1,5 @@
 import EventEmitter from 'events';
-import { throttle } from 'lodash';
+import throttle from 'lodash.throttle';
 
 const currentDragOffsets = {
     left: 0,
