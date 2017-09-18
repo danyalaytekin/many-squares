@@ -12,14 +12,20 @@ This project is [deployed onto GitHub Pages](https://danyalaytekin.github.io/man
 
 ## Getting started locally
 
+### Install
+
 Clone the repo, and then:
 
 ```
 brew install nvm
 nvm install
 npm install
+```
+
+### Build
+
+```
 npm run build
-open docs/index.html
 ```
 
 ### Run tests
