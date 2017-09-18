@@ -40,7 +40,7 @@ function initialise () {
 
 function onViewChanged () {
     const areas = findAreas ();
-    tableRenderer.render (areas);
+    tableRenderer.render (areas, document.getElementById ('results'));
     areas.forEach ((area, index) => shapeBuilder.setGroupColour (index, area.group));
 }
 
