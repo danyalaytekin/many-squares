@@ -1,8 +1,7 @@
 export function render (areas) {
-    let rowHtml = `<tr><th>Group containing</th><th>Area (pixels squared)</th></tr>`;
-    for (let i = 0; i < areas.length; ++i) {
-        rowHtml += `<tr><td>${areas[i].group[0].innerHTML}</td><td>${areas[i].area}</td></tr>`;
-    }
+    // TODO: Improve naming of `area` given that `area.area` appears below.
     const tableElement = document.getElementById ('results');
-    tableElement.innerHTML = rowHtml;
+    const headerHtml = '<tr><th>Group containing</th><th>Area (pixels squared)</th></tr>';
+    const rowsHtml = areas.map(area => `<tr><td>${area.group[0].innerHTML}</td><td>${area.area}</td></tr>`).join();
+    tableElement.innerHTML = headerHtml + rowsHtml;
 }
