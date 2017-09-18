@@ -6,6 +6,7 @@
   "scripts": {
     "build": "webpack",
     "test": "mocha",
+    "open": "open docs/index.html"
   },
   "repository": "danyalaytekin/many-squares",
   "author": "Danyal Aytekin",
