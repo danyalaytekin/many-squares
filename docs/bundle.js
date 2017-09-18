@@ -139,6 +139,7 @@ const options = {
     dragEventThrottlePeriod: 100
 };
 
+
 const limits = {
     width: 920,
     height: 400

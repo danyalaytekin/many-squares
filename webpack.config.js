@@ -10,6 +10,5 @@ module.exports = {
   plugins: [
     new BundleAnalyzerPlugin ()
   ],
-  target: 'web',
-  watch: true
+  target: 'web'
 };
