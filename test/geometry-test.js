@@ -7,6 +7,15 @@ describe('Geometry', function () {
             this.rectangle = rectangle;
         }
         
+        static create (left, top, side) {
+            return new SquareElement({
+                left,
+                top,
+                right: left + side,
+                bottom: top + side
+            });
+        }
+
         getBoundingClientRect () {
             return this.rectangle;
         }
@@ -17,18 +26,17 @@ describe('Geometry', function () {
             assert.strictEqual (geometry.findShapeGroups ( [] ).length, 0);
         });
 
-        it('given one shape, should find one group, with group containing that shape', function () {
-            const element = new SquareElement ({
-                left: 0, 
-                right: 10, 
-                top: 0,
-                bottom: 10
-            });
+        it('given one shape, should find the single group', function () {
+            const element = SquareElement.create (0, 0, 10);
             const groups = geometry.findShapeGroups ( [ element ] );
             assert.strictEqual (groups.length, 1);
             assert.strictEqual (groups[0].length, 1);
             assert.strictEqual (groups[0][0], element);
         });
+
+        it('given two non-overlapping shapes, should find the two groups', function () {
+        });
+        
     });
 
     describe('#findExtremitiesOfGroup(group)', function () {        
