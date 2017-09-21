@@ -35,6 +35,17 @@ describe('Geometry', function () {
         });
 
         it('given two non-overlapping shapes, should find the two groups', function () {
+            const elements = [ 
+                SquareElement.create (0, 0, 10),
+                SquareElement.create (20, 20, 10)
+            ];
+            const groups = geometry.findShapeGroups (elements);
+            assert.strictEqual (groups.length, 2);
+            groups.forEach (function (group, index) {
+                assert.strictEqual (groups[index].length, 1);
+                assert.strictEqual (groups[index][0], elements[index]);
+            });
+        });
         });
         
     });
