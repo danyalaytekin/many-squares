@@ -205,12 +205,12 @@ function findExtremitiesOfGroup (group) {
     return extremes;
 }
 
-function createPaintableCanvasForGroup (extremes) {
+function createPaintableCanvasForGroup (rectangle) {
     let canvas = [];
     
     const canvasLimits = {
-        width: Math.floor(extremes.right - extremes.left),
-        height: Math.floor(extremes.bottom - extremes.top)
+        width: Math.floor(rectangle.right - rectangle.left),
+        height: Math.floor(rectangle.bottom - rectangle.top)
     };
 
     for (let i = 0; i < canvasLimits.width; ++i) {

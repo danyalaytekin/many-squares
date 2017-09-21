@@ -2,6 +2,12 @@ import assert from 'assert';
 import * as geometry from '../src/model/geometry';
 
 describe('Geometry', function () {
+    describe('#findShapeGroups(shapeElements)', function () {
+        it('should find no groups given no shapes', function () {
+            assert.strictEqual(geometry.findShapeGroups ( [] ).length, 0);
+        });
+    });
+
     describe('#findExtremitiesOfGroup(group)', function () {        
         class SquareElement {
             constructor (rectangle) {
