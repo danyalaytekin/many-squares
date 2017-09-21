@@ -17,12 +17,34 @@ describe('Geometry', function () {
             return { left, right, top, bottom };
         }
         
-        it('finds the extremes of one square of side 0 to MAX_VALUE', function () {
+        it('finds the extremes of one massive square', function () {
             const rectangle = createRectangle (0, Number.MAX_VALUE, 0, Number.MAX_VALUE);
             const group = [ new SquareElement (rectangle) ];
             const extremes = geometry.findExtremitiesOfGroup (group);
             assert.deepStrictEqual (extremes, rectangle);
         });
+
+        it('finds the extremes of one zero square', function () {
+            const rectangle = createRectangle (0, 0, 0, 0);
+            const group = [ new SquareElement (rectangle) ];
+            const extremes = geometry.findExtremitiesOfGroup (group);
+            assert.deepStrictEqual (extremes, rectangle);
+        });
+
+        it('finds the extremes of two squares', function () {
+            const rectangles = [
+                createRectangle (0, 20, 10, 30),
+                createRectangle (10, 30, 0, 40)
+            ];
+            const group = rectangles.map (r => new SquareElement (r));
+            const extremes = geometry.findExtremitiesOfGroup (group);
+            assert.deepStrictEqual (extremes, {
+                left: 0,
+                right: 30,
+                top: 0,
+                bottom: 40
+            });
+        })
     });
 
     describe('#createPaintableCanvasForGroup(rectangle)', function () {
