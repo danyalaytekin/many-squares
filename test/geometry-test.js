@@ -2,6 +2,29 @@ import assert from 'assert';
 import * as geometry from '../src/model/geometry';
 
 describe('Geometry', function () {
+    describe('#findExtremitiesOfGroup(group)', function () {        
+        class SquareElement {
+            constructor (rectangle) {
+                this.rectangle = rectangle;
+            }
+
+            getBoundingClientRect () {
+                return this.rectangle;
+            }
+        };
+
+        function createRectangle (left, right, top, bottom) {
+            return { left, right, top, bottom };
+        }
+        
+        it('finds the extremes of one square of side 0 to MAX_VALUE', function () {
+            const rectangle = createRectangle (0, Number.MAX_VALUE, 0, Number.MAX_VALUE);
+            const group = [ new SquareElement (rectangle) ];
+            const extremes = geometry.findExtremitiesOfGroup (group);
+            assert.deepStrictEqual (extremes, rectangle);
+        });
+    });
+
     describe('#createPaintableCanvasForGroup(rectangle)', function () {
         function createSmallRectangle () {
             return {
