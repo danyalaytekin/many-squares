@@ -8,7 +8,8 @@
     "watch": "webpack --watch",
     "test": "nyc --reporter=text --reporter=lcov mocha --compilers js:babel-core/register",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
-    "open": "open docs/index.html"
+    "open": "open docs/index.html",
+    "open-coverage": "open coverage/lcov-report/index.html"
   },
   "repository": "danyalaytekin/many-squares",
   "author": "Danyal Aytekin",
