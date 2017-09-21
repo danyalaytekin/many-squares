@@ -191,8 +191,9 @@ describe('Geometry', function () {
     });
 
     describe('#paintGroupOntoCanvas', function () {
-        it('given no group, should paint nothing', function () {
+        it('given no group, should paint nothing', function () {            
             geometry.paintGroupOntoCanvas ([], [], createRectangle (0, 0, 0, 0));
-        });    
+            // TODO: Ok-ish because no exception, but this should probably spy on the array access.
+        });
     });
 });
