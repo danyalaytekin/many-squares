@@ -2,23 +2,36 @@ import assert from 'assert';
 import * as geometry from '../src/model/geometry';
 
 describe('Geometry', function () {
+    class SquareElement {
+        constructor (rectangle) {
+            this.rectangle = rectangle;
+        }
+        
+        getBoundingClientRect () {
+            return this.rectangle;
+        }
+    };
+
     describe('#findShapeGroups(shapeElements)', function () {
-        it('should find no groups given no shapes', function () {
-            assert.strictEqual(geometry.findShapeGroups ( [] ).length, 0);
+        it('given no shapes, should find no groups', function () {
+            assert.strictEqual (geometry.findShapeGroups ( [] ).length, 0);
+        });
+
+        it('given one shape, should find one group, with group containing that shape', function () {
+            const element = new SquareElement ({
+                left: 0, 
+                right: 10, 
+                top: 0,
+                bottom: 10
+            });
+            const groups = geometry.findShapeGroups ( [ element ] );
+            assert.strictEqual (groups.length, 1);
+            assert.strictEqual (groups[0].length, 1);
+            assert.strictEqual (groups[0][0], element);
         });
     });
 
     describe('#findExtremitiesOfGroup(group)', function () {        
-        class SquareElement {
-            constructor (rectangle) {
-                this.rectangle = rectangle;
-            }
-
-            getBoundingClientRect () {
-                return this.rectangle;
-            }
-        };
-
         function createRectangle (left, right, top, bottom) {
             return { left, right, top, bottom };
         }
