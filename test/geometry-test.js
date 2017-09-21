@@ -46,8 +46,18 @@ describe('Geometry', function () {
                 assert.strictEqual (groups[index][0], elements[index]);
             });
         });
+
+        it('given two overlapping shapes, should find the single group', function () {
+            const elements = [ 
+                SquareElement.create (0, 0, 10),
+                SquareElement.create (5, 5, 10)
+            ];
+            const groups = geometry.findShapeGroups (elements);
+            assert.strictEqual (groups.length, 1);
+            assert.strictEqual (groups[0].length, 2);
+            assert.strictEqual (groups[0][0], elements[0]);
+            assert.strictEqual (groups[0][1], elements[1]);
         });
-        
     });
 
     describe('#findExtremitiesOfGroup(group)', function () {        
