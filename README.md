@@ -1,6 +1,7 @@
 # many-squares
 
 [![Build Status](https://travis-ci.org/danyalaytekin/many-squares.svg?branch=master)](https://travis-ci.org/danyalaytekin/many-squares)
+[![Coverage Status](https://coveralls.io/repos/github/danyalaytekin/many-squares/badge.svg?branch=master)](https://coveralls.io/github/danyalaytekin/many-squares?branch=master)
 [![Dependency Status](https://gemnasium.com/badges/github.com/danyalaytekin/many-squares.svg)](https://gemnasium.com/github.com/danyalaytekin/many-squares)
 
 This project is [deployed onto GitHub Pages](https://danyalaytekin.github.io/many-squares).  Deployable assets are in `docs`, rather than the usual `dist`; this is because `docs` is the default location for GitHub Pages. The project's tests [run on Travis](https://travis-ci.org/danyalaytekin/many-squares) after each commit.
