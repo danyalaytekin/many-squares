@@ -2,18 +2,21 @@ import assert from 'assert';
 import * as geometry from '../src/model/geometry';
 
 describe('Geometry', function () {
+    function createRectangle (left, top, right, bottom) {
+        return { left, top, right, bottom };
+    }
+
+    function createSquare (left, top, side) {
+        return createRectangle (left, top, left + side, top + side);
+    }
+
     class SquareElement {
         constructor (rectangle) {
             this.rectangle = rectangle;
         }
         
         static create (left, top, side) {
-            return new SquareElement({
-                left,
-                top,
-                right: left + side,
-                bottom: top + side
-            });
+            return new SquareElement(createSquare (left, top, side));
         }
 
         getBoundingClientRect () {
@@ -61,19 +64,15 @@ describe('Geometry', function () {
     });
 
     describe('#findExtremitiesOfGroup(group)', function () {        
-        function createRectangle (left, right, top, bottom) {
-            return { left, right, top, bottom };
-        }
-        
         it('finds the extremes of one massive square', function () {
-            const rectangle = createRectangle (0, Number.MAX_VALUE, 0, Number.MAX_VALUE);
+            const rectangle = createSquare (0, 0, Number.MAX_VALUE);
             const group = [ new SquareElement (rectangle) ];
             const extremes = geometry.findExtremitiesOfGroup (group);
             assert.deepStrictEqual (extremes, rectangle);
         });
 
         it('finds the extremes of one zero square', function () {
-            const rectangle = createRectangle (0, 0, 0, 0);
+            const rectangle = createSquare (0, 0, 0);
             const group = [ new SquareElement (rectangle) ];
             const extremes = geometry.findExtremitiesOfGroup (group);
             assert.deepStrictEqual (extremes, rectangle);
@@ -81,14 +80,14 @@ describe('Geometry', function () {
 
         it('finds the extremes of two squares', function () {
             const rectangles = [
-                createRectangle (0, 20, 10, 30),
-                createRectangle (10, 30, 0, 40)
+                createSquare (0, 10, 20),
+                createSquare (10, 0, 40)
             ];
             const group = rectangles.map (r => new SquareElement (r));
             const extremes = geometry.findExtremitiesOfGroup (group);
             assert.deepStrictEqual (extremes, {
                 left: 0,
-                right: 30,
+                right: 50,
                 top: 0,
                 bottom: 40
             });
@@ -97,21 +96,11 @@ describe('Geometry', function () {
 
     describe('#createPaintableCanvasForGroup(rectangle)', function () {
         function createSmallRectangle () {
-            return {
-                left: 1,
-                right: 2,
-                top: 1,
-                bottom: 2
-            };
+            return createRectangle (1, 1, 2, 2);
         }
 
         it('should return an empty array, when a rectangle with zero area is provided', function () {
-            const rectangle = {
-                left: 1,
-                right: 1,
-                top: 1,
-                bottom: 1
-            };
+            const rectangle = createRectangle (1, 1, 1, 1);
             const canvas = geometry.createPaintableCanvasForGroup (rectangle);
             assert.strictEqual(canvas.length, 0);
         });
@@ -199,5 +188,11 @@ describe('Geometry', function () {
                 9
             );            
         });
+    });
+
+    describe('#paintGroupOntoCanvas', function () {
+        it('given no group, should paint nothing', function () {
+            geometry.paintGroupOntoCanvas ([], [], createRectangle (0, 0, 0, 0));
+        });    
     });
 });
